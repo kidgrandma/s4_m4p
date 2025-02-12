@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk LA Game Map</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin: 0; padding: 0; background: black; }
+        #map { width: 100vw; height: 100vh; }
+        .mapboxgl-popup-content { background: rgba(0, 0, 0, 0.8); color: #0ff; border: 1px solid #ff00ff; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoia2lkZ3JhbmRtYSIsImEiOiJjbTcxaXdyYmQwY213MnJvanh4em9lMTF5In0.HNoz7yMV2oamUgpdFCuZ7A';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v10',
+            center: [-118.2437, 34.0522], // Los Angeles
+            zoom: 11
+        });
 
+        // Sample neighborhoods (Replace with actual geojson data)
+        const neighborhoods = [
+            { name: "Downtown", coords: [-118.2437, 34.0522], state: "Active", points: 1000 },
+            { name: "Silverlake", coords: [-118.2702, 34.0878], state: "Inactive", points: 0 },
+            { name: "Echo Park", coords: [-118.2606, 34.0782], state: "Completed", team: "Red Faction" }
+        ];
+
+        neighborhoods.forEach(n => {
+            const popupContent = `<strong>${n.name}</strong><br>Status: ${n.state}<br>` + 
+                (n.state === "Active" ? `Points Needed: ${n.points}` : "");
+            
+            new mapboxgl.Marker({ color: n.state === "Completed" ? "red" : "cyan" })
+                .setLngLat(n.coords)
+                .setPopup(new mapboxgl.Popup().setHTML(popupContent))
+                .addTo(map);
+        });
+    </script>
+</body>
+</html>
