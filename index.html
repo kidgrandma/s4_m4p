@@ -9,7 +9,11 @@
     <style>
         body { margin: 0; padding: 0; background: black; }
         #map { width: 100vw; height: 100vh; }
-        .mapboxgl-popup-content { background: rgba(0, 0, 0, 0.8); color: #0ff; border: 1px solid #ff00ff; }
+        .mapboxgl-popup-content { 
+            background: rgba(0, 0, 0, 0.8); 
+            color: #0ff; 
+            border: 1px solid #ff00ff; 
+        }
     </style>
 </head>
 <body>
@@ -19,31 +23,31 @@
         
         const map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/kidgrandma/cm73x4jjt00az01sqbejh9mt1',
+            style: 'mapbox://styles/kidgrandma/cm73z7v6t006v01rfb3mra8a9',
             center: [-118.2437, 34.0522], // Los Angeles
             zoom: 11
         });
 
-        // Load LA Times Neighborhood Boundaries from GitHub
         map.on('load', function () {
             map.addSource('la-neighborhoods', {
                 type: 'geojson',
                 data: 'https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson'
             });
 
-            // Add neighborhood borders
+            // Add continuous glowing borders
             map.addLayer({
                 id: 'neighborhood-borders',
                 type: 'line',
                 source: 'la-neighborhoods',
                 paint: {
-                    'line-color': '#ff00ff', // Neon pink
-                    'line-width': 2,
-                    'line-opacity': 0.8
+                    'line-color': '#ff00ff', // Neon pink glow
+                    'line-width': 2.5,
+                    'line-opacity': 1,
+                    'line-blur': 2 // Soft glow effect
                 }
             });
 
-            // Optional: Fill the neighborhoods with a transparent overlay
+            // Set all neighborhoods to Inactive except Silverlake, Echo Park, and Los Feliz
             map.addLayer({
                 id: 'neighborhood-fill',
                 type: 'fill',
@@ -51,34 +55,36 @@
                 paint: {
                     'fill-color': [
                         'match',
-                        ['get', 'state'],
-                        'Active', '#00ff00', // Green for Active
-                        'Completed', '#ff0000', // Red for Completed
-                        'Inactive', '#555555', // Gray for Inactive
-                        '#888888' // Default color
+                        ['get', 'name'],
+                        'Silverlake', '#00ff00', // Green for Active
+                        'Echo Park', '#00ff00',
+                        'Los Feliz', '#00ff00',
+                        '#111111' // Default dark gray (dead zones)
                     ],
                     'fill-opacity': 0.3
                 }
             });
 
-            // Hover effect: Highlight border on mouseover
-            map.on('mouseenter', 'neighborhood-borders', function () {
-                map.setPaintProperty('neighborhood-borders', 'line-color', '#00ff00'); // Highlight effect
-            });
-
-            map.on('mouseleave', 'neighborhood-borders', function () {
-                map.setPaintProperty('neighborhood-borders', 'line-color', '#ff00ff');
-            });
-
-            // Click event to show popup with neighborhood info
+            // Click event: highlight selected neighborhood
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
-                const status = e.features[0].properties.state || 'Inactive';
-                const points = e.features[0].properties.points || 'N/A';
+                const status = (['Silverlake', 'Echo Park', 'Los Feliz'].includes(neighborhood)) ? "Active" : "Inactive";
 
+                // Update clicked neighborhood's color to make it stand out
+                map.setPaintProperty('neighborhood-fill', 'fill-color', [
+                    'match',
+                    ['get', 'name'],
+                    neighborhood, '#ffcc00', // Highlight color (bright yellow)
+                    'Silverlake', '#00ff00',
+                    'Echo Park', '#00ff00',
+                    'Los Feliz', '#00ff00',
+                    '#111111'
+                ]);
+
+                // Show popup with status
                 new mapboxgl.Popup()
                     .setLngLat(e.lngLat)
-                    .setHTML(`<strong>${neighborhood}</strong><br>Status: ${status}<br>Points Needed: ${points}`)
+                    .setHTML(`<strong>${neighborhood}</strong><br>Status: ${status}`)
                     .addTo(map);
             });
         });
