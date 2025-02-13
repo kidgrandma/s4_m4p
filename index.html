@@ -21,8 +21,25 @@
             style: 'mapbox://styles/mapbox/dark-v10',
             center: [-118.2437, 34.0522], // Los Angeles
             zoom: 11
+        }
+    map.on('load', function () {
+        // Add the LA Times tile layer
+        map.addSource('la-times-tiles', {
+            type: 'raster',
+            tiles: [
+                'https://d13y3fecj0gzph.cloudfront.net/quiet-la-0.4.0/{z}/{x}/{y}.png'
+            ],
+            tileSize: 256
         });
-
+</script>
+        // Add the layer to the map
+        map.addLayer({
+            id: 'la-times-map',
+            type: 'raster',
+            source: 'la-times-tiles',
+            paint: {}
+        });
+    });
         // Sample neighborhoods (Replace with actual geojson data)
         const neighborhoods = [
             { name: "Downtown", coords: [-118.2437, 34.0522], state: "Active", points: 1000 },
