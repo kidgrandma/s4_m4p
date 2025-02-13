@@ -16,28 +16,71 @@
     <div id="map"></div>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1Ijoia2lkZ3JhbmRtYSIsImEiOiJjbTcxaXdyYmQwY213MnJvanh4em9lMTF5In0.HNoz7yMV2oamUgpdFCuZ7A';
+        
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/kidgrandma/cm73x4jjt00az01sqbejh9mt1',
             center: [-118.2437, 34.0522], // Los Angeles
             zoom: 11
         });
-</script>
-        // Sample neighborhoods (Replace with actual geojson data)
-        const neighborhoods = [
-            { name: "Downtown", coords: [-118.2437, 34.0522], state: "Active", points: 1000 },
-            { name: "Silverlake", coords: [-118.2702, 34.0878], state: "Inactive", points: 0 },
-            { name: "Echo Park", coords: [-118.2606, 34.0782], state: "Completed", team: "Red Faction" }
-        ];
 
-        neighborhoods.forEach(n => {
-            const popupContent = `<strong>${n.name}</strong><br>Status: ${n.state}<br>` + 
-                (n.state === "Active" ? `Points Needed: ${n.points}` : "");
-            
-            new mapboxgl.Marker({ color: n.state === "Completed" ? "red" : "cyan" })
-                .setLngLat(n.coords)
-                .setPopup(new mapboxgl.Popup().setHTML(popupContent))
-                .addTo(map);
+        // Load LA Times Neighborhood Boundaries from GitHub
+        map.on('load', function () {
+            map.addSource('la-neighborhoods', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson'
+            });
+
+            // Add neighborhood borders
+            map.addLayer({
+                id: 'neighborhood-borders',
+                type: 'line',
+                source: 'la-neighborhoods',
+                paint: {
+                    'line-color': '#ff00ff', // Neon pink
+                    'line-width': 2,
+                    'line-opacity': 0.8
+                }
+            });
+
+            // Optional: Fill the neighborhoods with a transparent overlay
+            map.addLayer({
+                id: 'neighborhood-fill',
+                type: 'fill',
+                source: 'la-neighborhoods',
+                paint: {
+                    'fill-color': [
+                        'match',
+                        ['get', 'state'],
+                        'Active', '#00ff00', // Green for Active
+                        'Completed', '#ff0000', // Red for Completed
+                        'Inactive', '#555555', // Gray for Inactive
+                        '#888888' // Default color
+                    ],
+                    'fill-opacity': 0.3
+                }
+            });
+
+            // Hover effect: Highlight border on mouseover
+            map.on('mouseenter', 'neighborhood-borders', function () {
+                map.setPaintProperty('neighborhood-borders', 'line-color', '#00ff00'); // Highlight effect
+            });
+
+            map.on('mouseleave', 'neighborhood-borders', function () {
+                map.setPaintProperty('neighborhood-borders', 'line-color', '#ff00ff');
+            });
+
+            // Click event to show popup with neighborhood info
+            map.on('click', 'neighborhood-fill', function (e) {
+                const neighborhood = e.features[0].properties.name || 'Unknown';
+                const status = e.features[0].properties.state || 'Inactive';
+                const points = e.features[0].properties.points || 'N/A';
+
+                new mapboxgl.Popup()
+                    .setLngLat(e.lngLat)
+                    .setHTML(`<strong>${neighborhood}</strong><br>Status: ${status}<br>Points Needed: ${points}`)
+                    .addTo(map);
+            });
         });
     </script>
 </body>
