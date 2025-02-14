@@ -23,7 +23,7 @@
         
         const map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/kidgrandma/cm73z7v6t006v01rfb3mra8a9',
+            style: 'mapbox://styles/kidgrandma/cm73wzraa000o01slesw35u90',
             center: [-118.2437, 34.0522], // Los Angeles
             zoom: 11
         });
@@ -34,20 +34,20 @@
                 data: 'https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson'
             });
 
-            // Add continuous glowing borders
+            // Add glowing neighborhood borders
             map.addLayer({
                 id: 'neighborhood-borders',
                 type: 'line',
                 source: 'la-neighborhoods',
                 paint: {
-                    'line-color': '#ff00ff', // Neon pink glow
-                    'line-width': 2.5,
+                    'line-color': '#ff00ff', // Neon pink
+                    'line-width': 4.5, // Thicker
                     'line-opacity': 1,
-                    'line-blur': 2 // Soft glow effect
+                    'line-blur': 3.5 // Glow effect
                 }
             });
 
-            // Set all neighborhoods to Inactive except Silverlake, Echo Park, and Los Feliz
+            // Highlight specific neighborhoods in yellow, rest in dark gray
             map.addLayer({
                 id: 'neighborhood-fill',
                 type: 'fill',
@@ -56,37 +56,43 @@
                     'fill-color': [
                         'match',
                         ['get', 'name'],
-                        'Silverlake', '#00ff00', // Green for Active
-                        'Echo Park', '#00ff00',
-                        'Los Feliz', '#00ff00',
-                        '#111111' // Default dark gray (dead zones)
+                        'Echo Park', '#ffcc00',  // Bright yellow
+                        'Burbank', '#ffcc00',
+                        'Koreatown', '#ffcc00',
+                        'Westlake', '#ffcc00',
+                        'University Park', '#ffcc00',
+                        '#111111' // Default dead zone color (dark gray)
                     ],
-                    'fill-opacity': 0.3
+                    'fill-opacity': 0.4
                 }
             });
 
-            // Click event: highlight selected neighborhood
+            // Click event: highlight clicked neighborhood and show status
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
-                const status = (['Silverlake', 'Echo Park', 'Los Feliz'].includes(neighborhood)) ? "Active" : "Inactive";
+                const status = (['Echo Park', 'Burbank', 'Koreatown', 'Westlake', 'University Park'].includes(neighborhood)) ? "Active" : "Inactive";
 
-                // Update clicked neighborhood's color to make it stand out
-                map.setPaintProperty('neighborhood-fill', 'fill-color', [
-                    'match',
-                    ['get', 'name'],
-                    neighborhood, '#ffcc00', // Highlight color (bright yellow)
-                    'Silverlake', '#00ff00',
-                    'Echo Park', '#00ff00',
-                    'Los Feliz', '#00ff00',
-                    '#111111'
-                ]);
-
-                // Show popup with status
                 new mapboxgl.Popup()
                     .setLngLat(e.lngLat)
                     .setHTML(`<strong>${neighborhood}</strong><br>Status: ${status}`)
                     .addTo(map);
             });
+        });
+
+        // Add markers to highlight active neighborhoods
+        const activeNeighborhoods = [
+            { name: "Echo Park", coords: [-118.2606, 34.0782] },
+            { name: "Burbank", coords: [-118.3090, 34.1808] },
+            { name: "Koreatown", coords: [-118.3009, 34.0595] },
+            { name: "Westlake", coords: [-118.2763, 34.0586] },
+            { name: "University Park", coords: [-118.2831, 34.0265] }
+        ];
+
+        activeNeighborhoods.forEach(n => {
+            new mapboxgl.Marker({ color: "yellow" })
+                .setLngLat(n.coords)
+                .setPopup(new mapboxgl.Popup().setHTML(`<strong>${n.name}</strong><br>Status: Active - UNCLAIMED`))
+                .addTo(map);
         });
     </script>
 </body>
