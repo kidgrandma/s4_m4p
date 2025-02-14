@@ -36,31 +36,32 @@
                 data: 'https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson'
             });
 
-            // Cyber-style Grid Lines (cool blue default, purple hover glow)
+          
+            // Cyber Grid: Brighter Blue for More Contrast
             map.addLayer({
                 id: 'neighborhood-borders',
                 type: 'line',
                 source: 'la-neighborhoods',
                 paint: {
-                    'line-color': '#00ccff', // Cool blue grid effect
-                    'line-width': 3.5, 
-                    'line-opacity': 0.6,  // Lower opacity for less overpowering glow
-                    'line-blur': 1.5 // Reduced glow effect
+                    'line-color': '#0099ff', // Bright blue for more contrast
+                    'line-width': 4, 
+                    'line-opacity': 0.8,
+                    'line-blur': 1.5 // Subtle glow
                 }
             });
 
-            // Hover effect: Glow in purple when mouseover
+            // Hover effect: Cyan glow when mouseover
             map.on('mouseenter', 'neighborhood-borders', function () {
-                map.setPaintProperty('neighborhood-borders', 'line-color', '#9900ff'); // Purple glow
+                map.setPaintProperty('neighborhood-borders', 'line-color', '#00ffff'); // Cyan glow
                 map.setPaintProperty('neighborhood-borders', 'line-width', 5); // Slightly thicker on hover
             });
 
             map.on('mouseleave', 'neighborhood-borders', function () {
-                map.setPaintProperty('neighborhood-borders', 'line-color', '#00ccff'); // Reset to cool blue
-                map.setPaintProperty('neighborhood-borders', 'line-width', 3.5);
+                map.setPaintProperty('neighborhood-borders', 'line-color', '#0099ff'); // Reset to brighter blue
+                map.setPaintProperty('neighborhood-borders', 'line-width', 4);
             });
 
-            // Fix: Change Inactive Areas to Dark Purple to Avoid Green Tint
+            // Active Neighborhoods: Brighter Neon Purple, Higher Opacity
             map.addLayer({
                 id: 'neighborhood-fill',
                 type: 'fill',
@@ -69,17 +70,25 @@
                     'fill-color': [
                         'match',
                         ['get', 'name'],
-                        'Echo Park', '#9900ff',  // Cyberpunk purple
-                        'Koreatown', '#9900ff',
-                        'Westlake', '#9900ff',
-                        'University Park', '#9900ff',
-                        '#2a002a' // Dark desaturated purple instead of gray to avoid green tint
+                        'Echo Park', '#ff00ff',  // Bright neon pinkish-purple
+                        'Koreatown', '#ff00ff',
+                        'Westlake', '#ff00ff',
+                        'University Park', '#ff00ff',
+                        '#2a002a' // Dark desaturated purple for inactive zones
                     ],
-                    'fill-opacity': 0.3
+                    'fill-opacity': [
+                        'match',
+                        ['get', 'name'],
+                        'Echo Park', 0.5,  // Higher opacity for active areas
+                        'Koreatown', 0.5,
+                        'Westlake', 0.5,
+                        'University Park', 0.5,
+                        0.2 // Lower opacity for inactive areas
+                    ]
                 }
             });
 
-            // Click event: highlight clicked neighborhood and show status with emoji
+            // Click event: Add status with emoji
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
 
@@ -102,7 +111,7 @@
             });
         });
 
-        // Add Cyberpunk-style transparent glowing markers
+        // Updated Markers: Bright Cyan with Glowing Effect
         const activeNeighborhoods = [
             { name: "Echo Park", coords: [-118.2606, 34.0782] },
             { name: "Koreatown", coords: [-118.3009, 34.0595] },
@@ -111,14 +120,14 @@
         ];
 
         activeNeighborhoods.forEach(n => {
-            // Create custom markers for cyber effect
+            // Create custom markers with bright cyan glow
             const marker = document.createElement('div');
-            marker.style.width = '18px';
-            marker.style.height = '18px';
-            marker.style.background = 'radial-gradient(circle, rgba(153,0,255,0.9) 20%, rgba(0,0,0,0) 70%)';
-            marker.style.border = '2px solid rgba(153,0,255,0.7)';
+            marker.style.width = '22px';
+            marker.style.height = '22px';
+            marker.style.background = 'radial-gradient(circle, rgba(0,255,255,1) 20%, rgba(0,0,0,0) 70%)';
+            marker.style.border = '3px solid rgba(0,255,255,0.7)';
             marker.style.borderRadius = '50%';
-            marker.style.boxShadow = '0px 0px 10px rgba(153,0,255,0.9)';
+            marker.style.boxShadow = '0px 0px 15px rgba(0,255,255,1)'; // Stronger glow
             marker.style.pointerEvents = 'none'; // Prevent blocking clicks
 
             new mapboxgl.Marker(marker)
