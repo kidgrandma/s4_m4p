@@ -25,7 +25,7 @@
         
         const map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/kidgrandma/cm73wzraa000o01slesw35u90',
+            style: 'mapbox://styles/kidgrandma/cm74adxbk001j01slbh3eecgu',
             center: [-118.2437, 34.0522], // Los Angeles
             zoom: 11
         });
@@ -79,10 +79,21 @@
                 }
             });
 
-            // Click event: highlight clicked neighborhood and show status
+            // Click event: highlight clicked neighborhood and show status with emoji
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
-                const status = (['Echo Park', 'Koreatown', 'Westlake', 'University Park'].includes(neighborhood)) ? "Active" : "Inactive";
+
+                // Assign emoji based on the location
+                let emoji = "";
+                switch (neighborhood) {
+                    case "Echo Park": emoji = "⛄️"; break;
+                    case "Koreatown": emoji = "🔋"; break;
+                    case "Westlake": emoji = "🔌"; break;
+                    case "University Park": emoji = "🐣"; break;
+                    default: emoji = "";
+                }
+
+                const status = (emoji !== "") ? `Active ${emoji}` : "Inactive";
 
                 new mapboxgl.Popup()
                     .setLngLat(e.lngLat)
