@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Apocalyptic Los Angeles 4 Map</title>
@@ -13,8 +12,8 @@
         .mapboxgl-popup-content { 
             background: rgba(0, 0, 0, 0.8); 
             color: #0ff; 
-            border: 1px solid #00ff00; 
-            text-shadow: 0 0 5px #00ff00;
+            border: 1px solid #9900ff; 
+            text-shadow: 0 0 5px #9900ff;
         }
     </style>
 </head>
@@ -25,7 +24,7 @@
         
         const map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/kidgrandma/cm73wzraa000o01slesw35u90', 
+            style: 'mapbox://styles/kidgrandma/cm73wzraa000o01slesw35u90',
             center: [-118.2437, 34.0522], // Los Angeles
             zoom: 11
         });
@@ -36,7 +35,7 @@
                 data: 'https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson'
             });
 
-            // Cyber-style Grid Lines (cool blue default, neon green hover)
+            // Cyber-style Grid Lines (cool blue default, purple hover glow)
             map.addLayer({
                 id: 'neighborhood-borders',
                 type: 'line',
@@ -44,14 +43,14 @@
                 paint: {
                     'line-color': '#00ccff', // Cool blue grid effect
                     'line-width': 3.5, 
-                    'line-opacity': 0.8,
-                    'line-blur': 2 // Glow effect
+                    'line-opacity': 0.6,  // Lower opacity for less overpowering glow
+                    'line-blur': 1.5 // Reduced glow effect
                 }
             });
 
-            // Hover effect: Glow in neon green when mouseover
+            // Hover effect: Glow in purple when mouseover
             map.on('mouseenter', 'neighborhood-borders', function () {
-                map.setPaintProperty('neighborhood-borders', 'line-color', '#00ff00'); // Neon green glow
+                map.setPaintProperty('neighborhood-borders', 'line-color', '#9900ff'); // Purple glow
                 map.setPaintProperty('neighborhood-borders', 'line-width', 5); // Slightly thicker on hover
             });
 
@@ -60,7 +59,7 @@
                 map.setPaintProperty('neighborhood-borders', 'line-width', 3.5);
             });
 
-            // Highlight specific neighborhoods in neon green, rest in dark gray
+            // Highlight specific neighborhoods in purple, rest in dark gray
             map.addLayer({
                 id: 'neighborhood-fill',
                 type: 'fill',
@@ -69,10 +68,10 @@
                     'fill-color': [
                         'match',
                         ['get', 'name'],
-                        'Echo Park', '#00ff00',  // Bright neon green
-                        'Koreatown', '#00ff00',
-                        'Westlake', '#00ff00',
-                        'University Park', '#00ff00',
+                        'Echo Park', '#9900ff',  // Cyberpunk purple
+                        'Koreatown', '#9900ff',
+                        'Westlake', '#9900ff',
+                        'University Park', '#9900ff',
                         '#111111' // Default dead zone color (dark gray)
                     ],
                     'fill-opacity': 0.3
@@ -104,10 +103,10 @@
             const marker = document.createElement('div');
             marker.style.width = '18px';
             marker.style.height = '18px';
-            marker.style.background = 'radial-gradient(circle, rgba(0,255,255,0.9) 20%, rgba(0,0,0,0) 70%)';
-            marker.style.border = '2px solid rgba(0,255,255,0.7)';
+            marker.style.background = 'radial-gradient(circle, rgba(153,0,255,0.9) 20%, rgba(0,0,0,0) 70%)';
+            marker.style.border = '2px solid rgba(153,0,255,0.7)';
             marker.style.borderRadius = '50%';
-            marker.style.boxShadow = '0px 0px 10px rgba(0,255,255,0.9)';
+            marker.style.boxShadow = '0px 0px 10px rgba(153,0,255,0.9)';
             marker.style.pointerEvents = 'none'; // Prevent blocking clicks
 
             new mapboxgl.Marker(marker)
