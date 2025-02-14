@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Apocalyptic Los Angeles 4 Map</title>
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
     <style>
@@ -13,7 +12,8 @@
         .mapboxgl-popup-content { 
             background: rgba(0, 0, 0, 0.8); 
             color: #0ff; 
-            border: 1px solid #ff00ff; 
+            border: 1px solid #00ff00; 
+            text-shadow: 0 0 5px #00ff00;
         }
     </style>
 </head>
@@ -24,7 +24,7 @@
         
         const map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/kidgrandma/cm73wzraa000o01slesw35u90',
+            style: 'mapbox://styles/kidgrandma/cm73x4jjt00az01sqbejh9mt1',
             center: [-118.2437, 34.0522], // Los Angeles
             zoom: 11
         });
@@ -35,20 +35,31 @@
                 data: 'https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson'
             });
 
-            // Add glowing neighborhood borders
+            // Cyber-style Grid Lines (cool blue default, neon green hover)
             map.addLayer({
                 id: 'neighborhood-borders',
                 type: 'line',
                 source: 'la-neighborhoods',
                 paint: {
-                    'line-color': '#ff00ff', // Neon pink
-                    'line-width': 4.5, // Thicker
-                    'line-opacity': 1,
-                    'line-blur': 3.5 // Glow effect
+                    'line-color': '#00ccff', // Cool blue grid effect
+                    'line-width': 3.5, 
+                    'line-opacity': 0.8,
+                    'line-blur': 2 // Glow effect
                 }
             });
 
-            // Highlight specific neighborhoods in yellow, rest in dark gray
+            // Hover effect: Glow in neon green when mouseover
+            map.on('mouseenter', 'neighborhood-borders', function () {
+                map.setPaintProperty('neighborhood-borders', 'line-color', '#00ff00'); // Neon green glow
+                map.setPaintProperty('neighborhood-borders', 'line-width', 5); // Slightly thicker on hover
+            });
+
+            map.on('mouseleave', 'neighborhood-borders', function () {
+                map.setPaintProperty('neighborhood-borders', 'line-color', '#00ccff'); // Reset to cool blue
+                map.setPaintProperty('neighborhood-borders', 'line-width', 3.5);
+            });
+
+            // Highlight specific neighborhoods in neon green, rest in dark gray
             map.addLayer({
                 id: 'neighborhood-fill',
                 type: 'fill',
@@ -57,21 +68,20 @@
                     'fill-color': [
                         'match',
                         ['get', 'name'],
-                        'Echo Park', '#ffcc00',  // Bright yellow
-                        'Burbank', '#ffcc00',
-                        'Koreatown', '#ffcc00',
-                        'Westlake', '#ffcc00',
-                        'University Park', '#ffcc00',
+                        'Echo Park', '#00ff00',  // Bright neon green
+                        'Koreatown', '#00ff00',
+                        'Westlake', '#00ff00',
+                        'University Park', '#00ff00',
                         '#111111' // Default dead zone color (dark gray)
                     ],
-                    'fill-opacity': 0.4
+                    'fill-opacity': 0.3
                 }
             });
 
             // Click event: highlight clicked neighborhood and show status
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
-                const status = (['Echo Park', 'Burbank', 'Koreatown', 'Westlake', 'University Park'].includes(neighborhood)) ? "Active" : "Inactive";
+                const status = (['Echo Park', 'Koreatown', 'Westlake', 'University Park'].includes(neighborhood)) ? "Active" : "Inactive";
 
                 new mapboxgl.Popup()
                     .setLngLat(e.lngLat)
@@ -80,19 +90,27 @@
             });
         });
 
-        // Add markers to highlight active neighborhoods
+        // Add Cyberpunk-style transparent glowing markers
         const activeNeighborhoods = [
             { name: "Echo Park", coords: [-118.2606, 34.0782] },
-            { name: "Burbank", coords: [-118.3090, 34.1808] },
             { name: "Koreatown", coords: [-118.3009, 34.0595] },
             { name: "Westlake", coords: [-118.2763, 34.0586] },
             { name: "University Park", coords: [-118.2831, 34.0265] }
         ];
 
         activeNeighborhoods.forEach(n => {
-            new mapboxgl.Marker({ color: "yellow" })
+            // Create custom markers for cyber effect
+            const marker = document.createElement('div');
+            marker.style.width = '18px';
+            marker.style.height = '18px';
+            marker.style.background = 'radial-gradient(circle, rgba(0,255,255,0.9) 20%, rgba(0,0,0,0) 70%)';
+            marker.style.border = '2px solid rgba(0,255,255,0.7)';
+            marker.style.borderRadius = '50%';
+            marker.style.boxShadow = '0px 0px 10px rgba(0,255,255,0.9)';
+            marker.style.pointerEvents = 'none'; // Prevent blocking clicks
+
+            new mapboxgl.Marker(marker)
                 .setLngLat(n.coords)
-                .setPopup(new mapboxgl.Popup().setHTML(`<strong>${n.name}</strong><br>Status: Active - UNCLAIMED`))
                 .addTo(map);
         });
     </script>
