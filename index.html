@@ -22,14 +22,6 @@
     <div id="map"></div>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1Ijoia2lkZ3JhbmRtYSIsImEiOiJjbTcxaXdyYmQwY213MnJvanh4em9lMTF5In0.HNoz7yMV2oamUgpdFCuZ7A';
-        // Add Bunny Marker
-const markerElement = document.createElement('div');
-markerElement.className = 'custom-marker';
-markerElement.innerHTML = `<img src="assets/bunny.png" alt="Bunny Marker" style="width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 0 15px rgba(0, 255, 255, 0.9);">`;
-
-new mapboxgl.Marker(markerElement)
-    .setLngLat([-118.3009, 34.0595]) // Change coordinates if needed
-    .addTo(map);
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/kidgrandma/cm74adxbk001j01slbh3eecgu',
