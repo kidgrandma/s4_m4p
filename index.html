@@ -24,7 +24,7 @@
         
         const map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/kidgrandma/cm73wzraa000o01slesw35u90',
+            style: 'mapbox://styles/kidgrandma/cm73x4jjt00az01sqbejh9mt1',
             center: [-118.2437, 34.0522], // Los Angeles
             zoom: 11
         });
@@ -59,7 +59,7 @@
                 map.setPaintProperty('neighborhood-borders', 'line-width', 3.5);
             });
 
-            // Highlight specific neighborhoods in purple, rest in dark gray
+            // Fix: Change Inactive Areas to Dark Purple to Avoid Green Tint
             map.addLayer({
                 id: 'neighborhood-fill',
                 type: 'fill',
@@ -72,7 +72,7 @@
                         'Koreatown', '#9900ff',
                         'Westlake', '#9900ff',
                         'University Park', '#9900ff',
-                        '#111111' // Default dead zone color (dark gray)
+                        '#2a002a' // Dark desaturated purple instead of gray to avoid green tint
                     ],
                     'fill-opacity': 0.3
                 }
