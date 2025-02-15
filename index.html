@@ -93,13 +93,10 @@
                         'Koreatown', '#ff00ff',
                         'Westlake', '#ff00ff',
                         'University Park', '#ff00ff',
+                        'Eagle Rock', '#ff00ff',
+                        'Highland Park', '#ff00ff',
                         'Los Feliz', '#00ff00', // VIRGINS (Neon Green)
                         'West Hollywood', '#0099ff',
-                        'Arlington Heights', '#0099ff',
-                        'Leimert Park', '#0099ff',
-                        'Exposition Park', '#0099ff',
-                        'Eagle Rock', '#0099ff',
-                        'Highland Park', '#0099ff',
                         'West Adams', '#0099ff',
                         'Mid City', '#0099ff',
                         'Baldwin Hills', '#0099ff',
@@ -117,6 +114,8 @@
                 { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN" },
                 { name: "Westlake", coords: [-118.2763, 34.0586], team: "veterans", label: "VETERAN" },
                 { name: "University Park", coords: [-118.2831, 34.0265], team: "veterans", label: "VETERAN" },
+                { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN" },
+                { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN" },
                 { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS" }
             ];
 
@@ -130,7 +129,7 @@
                     .addTo(map);
             });
 
-            // Click event: Show price instead of "Active"
+            // Click event: Show price or ownership
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
 
@@ -140,6 +139,8 @@
                     case "Koreatown":
                     case "Westlake":
                     case "University Park":
+                    case "Eagle Rock":
+                    case "Highland Park":
                         displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
                         break;
                     case "Los Feliz":
@@ -153,7 +154,6 @@
                     case "Florence":
                         displayText = `<span style="color:#00ff00; font-weight:bold;">$5000</span>`;
                         break;
-                    case "Eagle Rock":
                     case "Baldwin Hills":
                     case "Palms":
                         displayText = `<span style="color:#00ff00; font-weight:bold;">$7500</span>`;
