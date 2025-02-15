@@ -16,6 +16,18 @@
             border: 1px solid #9900ff; 
             text-shadow: 0 0 5px #9900ff;
         }
+        .claimed-marker {
+            width: 50px;
+            height: 50px;
+            background: #ff00ff;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 15px #ff00ff;
+        }
     </style>
 </head>
 <body>
@@ -35,32 +47,31 @@
                 data: 'https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson'
             });
 
-          
             // Cyber Grid: Brighter Blue for More Contrast
             map.addLayer({
                 id: 'neighborhood-borders',
                 type: 'line',
                 source: 'la-neighborhoods',
                 paint: {
-                    'line-color': '#0099ff', // Bright blue for more contrast
+                    'line-color': '#0099ff',
                     'line-width': 4, 
                     'line-opacity': 0.8,
-                    'line-blur': 1.5 // Subtle glow
+                    'line-blur': 1.5
                 }
             });
 
             // Hover effect: Cyan glow when mouseover
             map.on('mouseenter', 'neighborhood-borders', function () {
-                map.setPaintProperty('neighborhood-borders', 'line-color', '#00ffff'); // Cyan glow
-                map.setPaintProperty('neighborhood-borders', 'line-width', 5); // Slightly thicker on hover
+                map.setPaintProperty('neighborhood-borders', 'line-color', '#00ffff');
+                map.setPaintProperty('neighborhood-borders', 'line-width', 5);
             });
 
             map.on('mouseleave', 'neighborhood-borders', function () {
-                map.setPaintProperty('neighborhood-borders', 'line-color', '#0099ff'); // Reset to brighter blue
+                map.setPaintProperty('neighborhood-borders', 'line-color', '#0099ff');
                 map.setPaintProperty('neighborhood-borders', 'line-width', 4);
             });
 
-            // Active Neighborhoods: Brighter Neon Purple, Higher Opacity
+            // Updated Neighborhood Statuses
             map.addLayer({
                 id: 'neighborhood-fill',
                 type: 'fill',
@@ -69,69 +80,69 @@
                     'fill-color': [
                         'match',
                         ['get', 'name'],
-                        'Echo Park', '#ff00ff',  // Bright neon pinkish-purple
+                        'Echo Park', '#ff00ff',  // Bright neon pinkish-purple (claimed)
                         'Koreatown', '#ff00ff',
-                        'Westlake', '#ff00ff',
-                        'University Park', '#ff00ff',
+                        'Westlake', '#0099ff', // Blue for active with cost
+                        'University Park', '#0099ff',
+                        'West Hollywood', '#0099ff',
+                        'Los Feliz', '#0099ff',
                         '#2a002a' // Dark desaturated purple for inactive zones
                     ],
                     'fill-opacity': [
                         'match',
                         ['get', 'name'],
-                        'Echo Park', 0.5,  // Higher opacity for active areas
+                        'Echo Park', 0.5,
                         'Koreatown', 0.5,
                         'Westlake', 0.5,
                         'University Park', 0.5,
-                        0.2 // Lower opacity for inactive areas
+                        'West Hollywood', 0.5,
+                        'Los Feliz', 0.5,
+                        0.2
                     ]
                 }
             });
 
-            // Click event: Add status with emoji
+            // Permanent Markers for "VETERAN" Claimed Areas
+            const claimedZones = [
+                { name: "Echo Park", coords: [-118.2606, 34.0782] },
+                { name: "Koreatown", coords: [-118.3009, 34.0595] }
+            ];
+
+            claimedZones.forEach(zone => {
+                const markerElement = document.createElement('div');
+                markerElement.className = 'claimed-marker';
+                markerElement.innerText = "VETERAN";
+
+                new mapboxgl.Marker(markerElement)
+                    .setLngLat(zone.coords)
+                    .addTo(map);
+            });
+
+            // Click event: Show cost instead of "Active"
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
 
-                // Assign emoji based on the location
-                let emoji = "";
+                let displayText = "Inactive";
                 switch (neighborhood) {
-                    case "Echo Park": emoji = "⛄️"; break;
-                    case "Koreatown": emoji = "🔋"; break;
-                    case "Westlake": emoji = "🔌"; break;
-                    case "University Park": emoji = "🐣"; break;
-                    default: emoji = "";
+                    case "Echo Park":
+                    case "Koreatown":
+                        displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
+                        break;
+                    case "Westlake":
+                    case "University Park":
+                        displayText = `<span style="color:#00ff00; font-weight:bold;">$5000</span>`;
+                        break;
+                    case "West Hollywood":
+                    case "Los Feliz":
+                        displayText = `<span style="color:#00ff00; font-weight:bold;">$7500</span>`;
+                        break;
                 }
-
-                const status = (emoji !== "") ? `Active ${emoji}` : "Inactive";
 
                 new mapboxgl.Popup()
                     .setLngLat(e.lngLat)
-                    .setHTML(`<strong>${neighborhood}</strong><br>Status: ${status}`)
+                    .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
                     .addTo(map);
             });
-        });
-
-        // Updated Markers: Bright Cyan with Glowing Effect
-        const activeNeighborhoods = [
-            { name: "Echo Park", coords: [-118.2606, 34.0782] },
-            { name: "Koreatown", coords: [-118.3009, 34.0595] },
-            { name: "Westlake", coords: [-118.2763, 34.0586] },
-            { name: "University Park", coords: [-118.2831, 34.0265] }
-        ];
-
-        activeNeighborhoods.forEach(n => {
-            // Create custom markers with bright cyan glow
-            const marker = document.createElement('div');
-            marker.style.width = '22px';
-            marker.style.height = '22px';
-            marker.style.background = 'radial-gradient(circle, rgba(0,255,255,1) 20%, rgba(0,0,0,0) 70%)';
-            marker.style.border = '3px solid rgba(0,255,255,0.7)';
-            marker.style.borderRadius = '50%';
-            marker.style.boxShadow = '0px 0px 15px rgba(0,255,255,1)'; // Stronger glow
-            marker.style.pointerEvents = 'none'; // Prevent blocking clicks
-
-            new mapboxgl.Marker(marker)
-                .setLngLat(n.coords)
-                .addTo(map);
         });
     </script>
 </body>
