@@ -95,6 +95,11 @@
                         'University Park', '#ff00ff',
                         'Los Feliz', '#00ff00', // VIRGINS (Neon Green)
                         'West Hollywood', '#0099ff',
+                        'Arlington Heights', '#0099ff',
+                        'Leimert Park', '#0099ff',
+                        'Exposition Park', '#0099ff',
+                        'Eagle Rock', '#0099ff',
+                        'Highland Park', '#0099ff',
                         '#2a002a' // Dark desaturated purple for inactive zones
                     ],
                     'fill-opacity': [
@@ -106,28 +111,14 @@
                         'University Park', 0.5,
                         'Los Feliz', 0.5,
                         'West Hollywood', 0.5,
+                        'Arlington Heights', 0.5,
+                        'Leimert Park', 0.5,
+                        'Exposition Park', 0.5,
+                        'Eagle Rock', 0.5,
+                        'Highland Park', 0.5,
                         0.2
                     ]
                 }
-            });
-
-            // Permanent Markers for Claimed Areas
-            const claimedZones = [
-                { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN" },
-                { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN" },
-                { name: "Westlake", coords: [-118.2763, 34.0586], team: "veterans", label: "VETERAN" },
-                { name: "University Park", coords: [-118.2831, 34.0265], team: "veterans", label: "VETERAN" },
-                { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS" }
-            ];
-
-            claimedZones.forEach(zone => {
-                const markerElement = document.createElement('div');
-                markerElement.className = `claimed-marker ${zone.team}`;
-                markerElement.innerText = zone.label;
-
-                new mapboxgl.Marker(markerElement)
-                    .setLngLat(zone.coords)
-                    .addTo(map);
             });
 
             // Click event: Show cost instead of "Active"
@@ -147,6 +138,13 @@
                         break;
                     case "West Hollywood":
                         displayText = `<span style="color:#00ff00; font-weight:bold;">$7500</span>`;
+                        break;
+                    case "Arlington Heights":
+                    case "Leimert Park":
+                    case "Exposition Park":
+                    case "Eagle Rock":
+                    case "Highland Park":
+                        displayText = `<span style="color:#00ff00; font-weight:bold;">$5000</span>`;
                         break;
                 }
 
