@@ -88,13 +88,13 @@
                         'Silver Lake', '#ff00ff',
                         'Mar Vista', '#ff00ff',
                         'Hancock Park', '#ff00ff',
-                        'Sawtelle', '#ff00ff',  // VETERANS CLAIMED
+                        'Sawtelle', '#ff00ff',
+                        'San Pedro', '#ff00ff',  // VETERANS CLAIMED
                         'Los Feliz', '#00ff00',
                         'Palms', '#00ff00',
                         'West Adams', '#00ff00',
-                        'Mid-Wilshire', '#00ff00',  // VIRGINS CLAIMED
+                        'Mid-Wilshire', '#00ff00',
                         'West Hollywood', '#0099ff',
-                        'San Pedro', '#0099ff',
                         '#2a002a'
                     ],
                     'fill-opacity': 0.5
@@ -112,11 +112,12 @@
                 { name: "Silver Lake", coords: [-118.2702, 34.0869], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Mar Vista", coords: [-118.4338, 34.0164], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Hancock Park", coords: [-118.3287, 34.0745], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Sawtelle", coords: [-118.4487, 34.0466], team: "veterans", label: "VETERAN 🏆" }, // NEW CLAIMED
+                { name: "Sawtelle", coords: [-118.4487, 34.0466], team: "veterans", label: "VETERAN 🏆" },
+                { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" }, // NEW CLAIMED
                 { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
                 { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
                 { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" },
-                { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" } // NEW CLAIMED
+                { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" }
             ];
 
             claimedZones.forEach(zone => {
@@ -135,6 +136,7 @@
 
                 let displayText;
                 switch (neighborhood) {
+                    case "San Pedro":
                     case "Echo Park":
                     case "Koreatown":
                     case "Westlake":
@@ -154,7 +156,6 @@
                         displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
                         break;
                     case "West Hollywood": displayText = "$7500"; break;
-                    case "San Pedro": displayText = "$15000"; break;
                     default: displayText = "Inactive";
                 }
 
