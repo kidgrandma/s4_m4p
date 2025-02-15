@@ -86,7 +86,7 @@
                         'Eagle Rock', '#ff00ff',
                         'Highland Park', '#ff00ff',
                         'Silver Lake', '#ff00ff',
-                        'Los Feliz', '#00ff00',  // VIRGINS CLAIMED IT
+                        'Los Feliz', '#00ff00',
                         'Palms', '#00ff00',
                         'West Adams', '#00ff00',
                         'West Hollywood', '#0099ff',
@@ -110,34 +110,14 @@
                 { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Silver Lake", coords: [-118.2702, 34.0869], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },  // NOW CLAIMED BY VIRGINS
+                { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
                 { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
                 { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" }
             ];
 
-            claimedZones.forEach(zone => {
-                const markerElement = document.createElement('div');
-                markerElement.className = `claimed-marker ${zone.team}`;
-                markerElement.innerText = zone.label;
-
-                new mapboxgl.Marker(markerElement)
-                    .setLngLat(zone.coords)
-                    .addTo(map);
-            });
-
-            // Click event: Show price or ownership
+            // Click event: Show correct info
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
-
-                let displayText = {
-                    "West Hollywood": "$7500",
-                    "Mar Vista": "$10000",
-                    "Sawtelle": "$7500",
-                    "Mid-Wilshire": "$5000",
-                    "Hancock Park": "$7500",
-                    "San Pedro": "$15000"
-                }[neighborhood] || "Inactive";
-
                 new mapboxgl.Popup()
                     .setLngLat(e.lngLat)
                     .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
