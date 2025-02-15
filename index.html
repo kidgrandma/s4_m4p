@@ -86,14 +86,14 @@
                         'Eagle Rock', '#ff00ff',
                         'Highland Park', '#ff00ff',
                         'Silver Lake', '#ff00ff',
+                        'Mar Vista', '#ff00ff', // VETERANS CLAIMED
+                        'Hancock Park', '#ff00ff', // VETERANS CLAIMED
                         'Los Feliz', '#00ff00',
                         'Palms', '#00ff00',
                         'West Adams', '#00ff00',
                         'West Hollywood', '#0099ff',
-                        'Mar Vista', '#0099ff',
                         'Sawtelle', '#0099ff',
                         'Mid-Wilshire', '#0099ff',
-                        'Hancock Park', '#0099ff',
                         'San Pedro', '#0099ff',
                         '#2a002a'
                     ],
@@ -110,6 +110,8 @@
                 { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Silver Lake", coords: [-118.2702, 34.0869], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Mar Vista", coords: [-118.4338, 34.0164], team: "veterans", label: "VETERAN 🏆" }, // NEW CLAIMED
+                { name: "Hancock Park", coords: [-118.3287, 34.0745], team: "veterans", label: "VETERAN 🏆" }, // NEW CLAIMED
                 { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
                 { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
                 { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" }
@@ -138,6 +140,8 @@
                     case "Eagle Rock":
                     case "Highland Park":
                     case "Silver Lake":
+                    case "Mar Vista":
+                    case "Hancock Park":
                         displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
                         break;
                     case "Los Feliz":
@@ -146,10 +150,8 @@
                         displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
                         break;
                     case "West Hollywood": displayText = "$7500"; break;
-                    case "Mar Vista": displayText = "$10000"; break;
                     case "Sawtelle": displayText = "$7500"; break;
                     case "Mid-Wilshire": displayText = "$5000"; break;
-                    case "Hancock Park": displayText = "$7500"; break;
                     case "San Pedro": displayText = "$15000"; break;
                     default: displayText = "Inactive";
                 }
