@@ -100,24 +100,14 @@
                         'Exposition Park', '#0099ff',
                         'Eagle Rock', '#0099ff',
                         'Highland Park', '#0099ff',
+                        'West Adams', '#0099ff',
+                        'Mid City', '#0099ff',
+                        'Baldwin Hills', '#0099ff',
+                        'Florence', '#0099ff',
+                        'Palms', '#0099ff',
                         '#2a002a' // Dark desaturated purple for inactive zones
                     ],
-                    'fill-opacity': [
-                        'match',
-                        ['get', 'name'],
-                        'Echo Park', 0.5,
-                        'Koreatown', 0.5,
-                        'Westlake', 0.5,
-                        'University Park', 0.5,
-                        'Los Feliz', 0.5,
-                        'West Hollywood', 0.5,
-                        'Arlington Heights', 0.5,
-                        'Leimert Park', 0.5,
-                        'Exposition Park', 0.5,
-                        'Eagle Rock', 0.5,
-                        'Highland Park', 0.5,
-                        0.2
-                    ]
+                    'fill-opacity': 0.5
                 }
             });
 
@@ -140,7 +130,7 @@
                     .addTo(map);
             });
 
-            // Click event: Show cost instead of "Active"
+            // Click event: Show price instead of "Active"
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
 
@@ -158,12 +148,15 @@
                     case "West Hollywood":
                         displayText = `<span style="color:#00ff00; font-weight:bold;">$7500</span>`;
                         break;
-                    case "Arlington Heights":
-                    case "Leimert Park":
-                    case "Exposition Park":
-                    case "Eagle Rock":
-                    case "Highland Park":
+                    case "West Adams":
+                    case "Mid City":
+                    case "Florence":
                         displayText = `<span style="color:#00ff00; font-weight:bold;">$5000</span>`;
+                        break;
+                    case "Eagle Rock":
+                    case "Baldwin Hills":
+                    case "Palms":
+                        displayText = `<span style="color:#00ff00; font-weight:bold;">$7500</span>`;
                         break;
                 }
 
