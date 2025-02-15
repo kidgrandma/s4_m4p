@@ -112,15 +112,16 @@
             });
 
             // Permanent Markers for Claimed Areas
-            const claimedZones = [
-                { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN" },
-                { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN" },
-                { name: "Westlake", coords: [-118.2763, 34.0586], team: "veterans", label: "VETERAN" },
-                { name: "University Park", coords: [-118.2831, 34.0265], team: "veterans", label: "VETERAN" },
-                { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN" },
-                { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN" },
-                { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS" }
-            ];
+      const claimedZones = [
+    { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN" },
+    { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN" },
+    { name: "Westlake", coords: [-118.2763, 34.0586], team: "veterans", label: "VETERAN" },
+    { name: "University Park", coords: [-118.2831, 34.0265], team: "veterans", label: "VETERAN" },
+    { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN" },
+    { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN" },
+    { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS" },
+    { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS" } //
+];
 
             claimedZones.forEach(zone => {
                 const markerElement = document.createElement('div');
