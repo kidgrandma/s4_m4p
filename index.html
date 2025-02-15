@@ -18,15 +18,15 @@
         }
         /* Claimed Zone Markers */
         .claimed-marker {
-            width: 55px;
-            height: 55px;
+            width: 60px;
+            height: 60px;
             color: black;
             font-weight: bold;
             text-align: center;
-            line-height: 55px;
+            line-height: 60px;
             border-radius: 50%;
             border: 4px solid white;
-            font-size: 12px;
+            font-size: 14px;
         }
         /* VETERANS team: Bright Neon Pink */
         .veterans { 
@@ -115,9 +115,45 @@
                 { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" }
             ];
 
+            claimedZones.forEach(zone => {
+                const markerElement = document.createElement('div');
+                markerElement.className = `claimed-marker ${zone.team}`;
+                markerElement.innerText = zone.label;
+
+                new mapboxgl.Marker(markerElement)
+                    .setLngLat(zone.coords)
+                    .addTo(map);
+            });
+
             // Click event: Show correct info
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
+
+                let displayText;
+                switch (neighborhood) {
+                    case "Echo Park":
+                    case "Koreatown":
+                    case "Westlake":
+                    case "University Park":
+                    case "Eagle Rock":
+                    case "Highland Park":
+                    case "Silver Lake":
+                        displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
+                        break;
+                    case "Los Feliz":
+                    case "Palms":
+                    case "West Adams":
+                        displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
+                        break;
+                    case "West Hollywood": displayText = "$7500"; break;
+                    case "Mar Vista": displayText = "$10000"; break;
+                    case "Sawtelle": displayText = "$7500"; break;
+                    case "Mid-Wilshire": displayText = "$5000"; break;
+                    case "Hancock Park": displayText = "$7500"; break;
+                    case "San Pedro": displayText = "$15000"; break;
+                    default: displayText = "Inactive";
+                }
+
                 new mapboxgl.Popup()
                     .setLngLat(e.lngLat)
                     .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
