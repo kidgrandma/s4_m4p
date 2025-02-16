@@ -89,12 +89,26 @@
                         'Mar Vista', '#ff00ff',
                         'Hancock Park', '#ff00ff',
                         'Sawtelle', '#ff00ff',
-                        'San Pedro', '#ff00ff',  // VETERANS CLAIMED
+                        'San Pedro', '#ff00ff',
                         'Los Feliz', '#00ff00',
                         'Palms', '#00ff00',
                         'West Adams', '#00ff00',
                         'Mid-Wilshire', '#00ff00',
                         'West Hollywood', '#0099ff',
+                        'Pico-Robertson', '#0099ff',
+                        'West Los Angeles', '#0099ff',
+                        'Beverly Grove', '#0099ff',
+                        'Baldwin Hills/Crenshaw', '#0099ff',
+                        'Exposition Park', '#0099ff',
+                        'Vermont Square', '#0099ff',
+                        'Westchester', '#0099ff',
+                        'Vermont-Slauson', '#0099ff',
+                        'Glassell Park', '#0099ff',
+                        'Beverly Crest', '#0099ff',
+                        'Beverlywood', '#0099ff',
+                        'Del Rey', '#0099ff',
+                        'Lincoln Heights', '#0099ff',
+                        'Montecito Heights', '#0099ff',
                         '#2a002a'
                     ],
                     'fill-opacity': 0.5
@@ -113,7 +127,7 @@
                 { name: "Mar Vista", coords: [-118.4338, 34.0164], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Hancock Park", coords: [-118.3287, 34.0745], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Sawtelle", coords: [-118.4487, 34.0466], team: "veterans", label: "VETERAN 🏆" },
-                { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" }, // NEW CLAIMED
+                { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
                 { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
                 { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" },
@@ -127,41 +141,6 @@
 
                 new mapboxgl.Marker(markerElement)
                     .setLngLat(zone.coords)
-                    .addTo(map);
-            });
-
-            // Click event: Show correct info
-            map.on('click', 'neighborhood-fill', function (e) {
-                const neighborhood = e.features[0].properties.name || 'Unknown';
-
-                let displayText;
-                switch (neighborhood) {
-                    case "San Pedro":
-                    case "Echo Park":
-                    case "Koreatown":
-                    case "Westlake":
-                    case "University Park":
-                    case "Eagle Rock":
-                    case "Highland Park":
-                    case "Silver Lake":
-                    case "Mar Vista":
-                    case "Hancock Park":
-                    case "Sawtelle":
-                        displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
-                        break;
-                    case "Los Feliz":
-                    case "Palms":
-                    case "West Adams":
-                    case "Mid-Wilshire":
-                        displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
-                        break;
-                    case "West Hollywood": displayText = "$7500"; break;
-                    default: displayText = "Inactive";
-                }
-
-                new mapboxgl.Popup()
-                    .setLngLat(e.lngLat)
-                    .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
                     .addTo(map);
             });
         });
