@@ -129,7 +129,40 @@
                     .setLngLat(zone.coords)
                     .addTo(map);
             });
+const prices = {
+    "Pico-Robertson": "$5000",
+    "West Los Angeles": "$5000",
+    "Beverly Grove": "$5000",
+    "Baldwin Hills/Crenshaw": "$12000",
+    "Exposition Park": "$7000",
+    "Vermont Square": "$5000",
+    "Westchester": "$12000",
+    "Vermont-Slauson": "$12000",
+    "Glassell Park": "$5000",
+    "Beverly Crest": "$5000",
+    "Beverlywood": "$5000",
+    "Del Rey": "$10000",
+    "Lincoln Heights": "$7500",
+    "Montecito Heights": "$5000"
+};
 
+// 📌 Ensure new zones show price when clicked
+map.on('click', 'neighborhood-fill', function (e) {
+    const neighborhood = e.features[0].properties.name || 'Unknown';
+
+    if (prices[neighborhood]) {
+        new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(`<strong>${neighborhood}</strong><br>💰 ${prices[neighborhood]}`)
+            .addTo(map);
+        return;
+    }
+
+    new mapboxgl.Popup()
+        .setLngLat(e.lngLat)
+        .setHTML(`<strong>${neighborhood}</strong><br>Inactive`)
+        .addTo(map);
+});
             // Click event: Show correct info
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
