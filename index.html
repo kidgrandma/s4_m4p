@@ -70,7 +70,7 @@
         }
       });
 
-      // Updated Neighborhood Statuses (Fill Colors)
+      // Updated Neighborhood Statuses (Fill Layer)
       map.addLayer({
         id: 'neighborhood-fill',
         type: 'fill',
@@ -96,7 +96,8 @@
             'Palms', '#00ff00',
             'West Adams', '#00ff00',
             'Mid-Wilshire', '#00ff00',
-            // New AVAILABLE areas (Cyan)
+            // New Available Areas (Cyan)
+            'West Hollywood', '#0099ff',
             'Pico-Robertson', '#0099ff',
             'West Los Angeles', '#0099ff',
             'Beverly Grove', '#0099ff',
@@ -118,7 +119,7 @@
         }
       });
 
-      // Permanent Markers for Claimed Areas (Circle Markers)
+      // Permanent Markers for Claimed Areas
       const claimedZones = [
         { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN 🏆" },
         { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN 🏆" },
@@ -131,7 +132,10 @@
         { name: "Hancock Park", coords: [-118.3287, 34.0745], team: "veterans", label: "VETERAN 🏆" },
         { name: "Sawtelle", coords: [-118.4487, 34.0466], team: "veterans", label: "VETERAN 🏆" },
         { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" }
+        { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" }
       ];
 
       claimedZones.forEach(zone => {
@@ -146,7 +150,6 @@
       // Click event: Show correct info
       map.on('click', 'neighborhood-fill', function (e) {
         const neighborhood = e.features[0].properties.name || 'Unknown';
-
         let displayText;
         switch (neighborhood) {
           // Claimed by VETERANS
@@ -171,30 +174,40 @@
             displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
             break;
           // Available Areas with Prices
+          case "West Hollywood": 
+            displayText = "$7500"; 
+            break;
           case "Pico-Robertson":
           case "West Los Angeles":
           case "Beverly Grove":
           case "Vermont Square":
-            displayText = "$5000"; break;
+            displayText = "$5000"; 
+            break;
           case "Baldwin Hills/Crenshaw":
           case "Westchester":
           case "Vermont-Slauson":
-            displayText = "$12000"; break;
+            displayText = "$12000"; 
+            break;
           case "Exposition Park":
-            displayText = "$7000"; break;
+            displayText = "$7000"; 
+            break;
           case "Glassell Park":
           case "Beverly Crest":
           case "Beverlywood":
-          case "Montecito Heights":
-            displayText = "$5000"; break;
           case "Del Rey":
-            displayText = "$10000"; break;
           case "Lincoln Heights":
-            displayText = "$7500"; break;
+          case "Montecito Heights":
+            // For these, assign the appropriate price:
+            if (neighborhood === "Glassell Park" || neighborhood === "Beverly Crest" || neighborhood === "Beverlywood" || neighborhood === "Montecito Heights")
+              displayText = "$5000";
+            else if (neighborhood === "Del Rey")
+              displayText = "$10000";
+            else if (neighborhood === "Lincoln Heights")
+              displayText = "$7500";
+            break;
           default:
             displayText = "Inactive";
         }
-
         new mapboxgl.Popup()
           .setLngLat(e.lngLat)
           .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
