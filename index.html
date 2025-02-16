@@ -94,6 +94,8 @@
             'Pico-Robertson', '#ff00ff',
             'Beverly Grove', '#ff00ff',
             'Glassell Park', '#ff00ff',
+            'Lincoln Heights', '#ff00ff',
+            'Beverlywood', '#ff00ff',
             // Claimed by VIRGINS (Green)
             'Los Feliz', '#00ff00',
             'Palms', '#00ff00',
@@ -103,14 +105,12 @@
             'Exposition Park', '#00ff00',
             'Del Rey', '#00ff00',
             'West Los Angeles', '#00ff00',
+            'Baldwin Hills/Crenshaw', '#00ff00',
+            'Vermont-Slauson', '#00ff00',
             // Available Areas with Prices (Cyan)
             'West Hollywood', '#0099ff',
-            'Baldwin Hills/Crenshaw', '#0099ff',
             'Vermont Square', '#0099ff',
-            'Vermont-Slauson', '#0099ff',
             'Beverly Crest', '#0099ff',
-            'Beverlywood', '#0099ff',
-            'Lincoln Heights', '#0099ff',
             'Montecito Heights', '#0099ff',
             // Default for inactive areas:
             '#2a002a'
@@ -133,20 +133,24 @@
         { name: "Hancock Park", coords: [-118.3287, 34.0745], team: "veterans", label: "VETERAN 🏆" },
         { name: "Sawtelle", coords: [-118.4487, 34.0466], team: "veterans", label: "VETERAN 🏆" },
         { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" },
-        // New Veterans Claims
         { name: "Pico-Robertson", coords: [-118.431, 34.050], team: "veterans", label: "VETERAN 🏆" },
         { name: "Beverly Grove", coords: [-118.400, 34.073], team: "veterans", label: "VETERAN 🏆" },
         { name: "Glassell Park", coords: [-118.175, 34.107], team: "veterans", label: "VETERAN 🏆" },
+        // New Veterans Claims
+        { name: "Lincoln Heights", coords: [-118.200, 34.030], team: "veterans", label: "VETERAN 🏆" },
+        { name: "Beverlywood", coords: [-118.370, 34.085], team: "veterans", label: "VETERAN 🏆" },
         // Virgins (Green)
         { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
         { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" },
-        // New Virgins Claims
         { name: "Westchester", coords: [-118.410, 33.976], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Exposition Park", coords: [-118.288, 34.015], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Del Rey", coords: [-118.418, 33.980], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "West Los Angeles", coords: [-118.444, 34.045], team: "virgins", label: "VIRGINS 🏆" }
+        { name: "West Los Angeles", coords: [-118.444, 34.045], team: "virgins", label: "VIRGINS 🏆" },
+        // New Virgins Claims
+        { name: "Baldwin Hills/Crenshaw", coords: [-118.350, 34.000], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Vermont-Slauson", coords: [-118.260, 34.000], team: "virgins", label: "VIRGINS 🏆" }
       ];
 
       claimedZones.forEach(zone => {
@@ -178,6 +182,8 @@
           case "Pico-Robertson":
           case "Beverly Grove":
           case "Glassell Park":
+          case "Lincoln Heights":
+          case "Beverlywood":
             displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
             break;
           // Claimed by VIRGINS
@@ -189,27 +195,19 @@
           case "Exposition Park":
           case "Del Rey":
           case "West Los Angeles":
+          case "Baldwin Hills/Crenshaw":
+          case "Vermont-Slauson":
             displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
             break;
           // Available Areas with Prices
           case "West Hollywood": 
             displayText = "$7500"; 
             break;
-          case "Baldwin Hills/Crenshaw":
-            displayText = "$12000"; 
-            break;
           case "Vermont Square":
             displayText = "$5000"; 
             break;
-          case "Vermont-Slauson":
-            displayText = "$12000"; 
-            break;
           case "Beverly Crest":
-          case "Beverlywood":
             displayText = "$5000";
-            break;
-          case "Lincoln Heights":
-            displayText = "$7500";
             break;
           case "Montecito Heights":
             displayText = "$5000";
