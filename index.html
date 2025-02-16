@@ -5,15 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DA M4P</title>
-  <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
-  <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
   <style>
     body { margin: 0; padding: 0; background: black; }
     #map { width: 100vw; height: 100vh; }
-    .mapboxgl-popup-content { 
-      background: rgba(0, 0, 0, 0.8); 
-      color: #0ff; 
-      border: 1px solid #9900ff; 
+    .mapboxgl-popup-content {
+      background: rgba(0,0,0,0.8);
+      color: #0ff;
+      border: 1px solid #9900ff;
       text-shadow: 0 0 5px #9900ff;
     }
     /* Claimed Zone Markers */
@@ -47,7 +47,7 @@
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/kidgrandma/cm74adxbk001j01slbh3eecgu',
-      center: [-118.2437, 34.0522], // Los Angeles
+      center: [-118.2437, 34.0522],
       zoom: 11
     });
 
@@ -149,10 +149,9 @@
         { name: "West Los Angeles", coords: [-118.444, 34.045], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Baldwin Hills/Crenshaw", coords: [-118.350, 34.000], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Vermont-Slauson", coords: [-118.260, 34.000], team: "virgins", label: "VIRGINS 🏆" },
-        // New Virgins Claims with updated coordinates
-        { name: "Vermont Square", coords: [-118.265, 34.010], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Beverly Crest", coords: [-118.395, 34.080], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Montecito Heights", coords: [-118.185, 34.035], team: "virgins", label: "VIRGINS 🏆" }
+        // Updated Virgins Claims (Double-Checked Coordinates)
+        { name: "Vermont Square", coords: [-118.270, 34.005], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Montecito Heights", coords: [-118.190, 34.065], team: "virgins", label: "VIRGINS 🏆" }
       ];
 
       claimedZones.forEach(zone => {
@@ -164,12 +163,12 @@
           .addTo(map);
       });
 
-      // Click event: Show correct info for each neighborhood
+      // Popup click event
       map.on('click', 'neighborhood-fill', function (e) {
         const neighborhood = e.features[0].properties.name || 'Unknown';
         let displayText;
         switch (neighborhood) {
-          // Claimed by VETERANS
+          // VETERANS claimed areas
           case "San Pedro":
           case "Echo Park":
           case "Koreatown":
@@ -188,7 +187,7 @@
           case "Beverlywood":
             displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
             break;
-          // Claimed by VIRGINS
+          // VIRGINS claimed areas
           case "Los Feliz":
           case "Palms":
           case "West Adams":
@@ -204,9 +203,9 @@
           case "Montecito Heights":
             displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
             break;
-          // Available Area with Price
-          case "West Hollywood": 
-            displayText = "$7500"; 
+          // Available area with price
+          case "West Hollywood":
+            displayText = "$7500";
             break;
           default:
             displayText = "Inactive";
