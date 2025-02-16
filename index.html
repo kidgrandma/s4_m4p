@@ -16,7 +16,7 @@
             border: 1px solid #9900ff; 
             text-shadow: 0 0 5px #9900ff;
         }
-        /* Claimed Zone Markers */
+        /* Markers for Claimed Zones */
         .claimed-marker {
             width: 60px;
             height: 60px;
@@ -28,12 +28,12 @@
             border: 4px solid white;
             font-size: 14px;
         }
-        /* VETERANS team: Bright Neon Pink */
+        /* Veterans (Pink) */
         .veterans { 
             background: #ff00ff; 
             box-shadow: 0 0 20px #ff00ff;
         }
-        /* VIRGINS team: Bright Neon Green */
+        /* Virgins (Green) */
         .virgins { 
             background: #00ff00;
             box-shadow: 0 0 20px #00ff00;
@@ -70,54 +70,7 @@
                 }
             });
 
-            // Neighborhood Fill Colors
-            map.addLayer({
-                id: 'neighborhood-fill',
-                type: 'fill',
-                source: 'la-neighborhoods',
-                paint: {
-                    'fill-color': [
-                        'match',
-                        ['get', 'name'],
-                        // Veterans' claimed territories (Bright Pink)
-                        'Echo Park', '#ff00ff',  
-                        'Koreatown', '#ff00ff',
-                        'Westlake', '#ff00ff',
-                        'University Park', '#ff00ff',
-                        'Eagle Rock', '#ff00ff',
-                        'Highland Park', '#ff00ff',
-                        'Silver Lake', '#ff00ff',
-                        'Mar Vista', '#ff00ff',  
-                        'Hancock Park', '#ff00ff',
-                        'Sawtelle', '#ff00ff',
-                        'San Pedro', '#ff00ff',
-                        // Virgins' claimed territories (Bright Green)
-                        'Los Feliz', '#00ff00',
-                        'Palms', '#00ff00',
-                        'West Adams', '#00ff00',
-                        'Mid-Wilshire', '#00ff00',
-                        // Newly Activated Areas (Available for Purchase - Cyan)
-                        'Pico-Robertson', '#00ffff',
-                        'West Los Angeles', '#00ffff',
-                        'Beverly Grove', '#00ffff',
-                        'Baldwin Hills/Crenshaw', '#00ffff',
-                        'Exposition Park', '#00ffff',
-                        'Vermont Square', '#00ffff',
-                        'Westchester', '#00ffff',
-                        'Vermont-Slauson', '#00ffff',
-                        'Glassell Park', '#00ffff',
-                        'Beverly Crest', '#00ffff',
-                        'Beverlywood', '#00ffff',
-                        'Del Rey', '#00ffff',
-                        'Lincoln Heights', '#00ffff',
-                        'Montecito Heights', '#00ffff',
-                        '#2a002a'
-                    ],
-                    'fill-opacity': 0.5
-                }
-            });
-
-            // 🏆 Permanent Markers for Claimed Areas
+            // 🏆 Mark Claimed Zones with Circle Markers
             const claimedZones = {
                 "Echo Park": { team: "veterans", label: "🏆 VETERAN" },
                 "Koreatown": { team: "veterans", label: "🏆 VETERAN" },
@@ -143,10 +96,29 @@
                     .addTo(map);
             });
 
-            // Click event: Show correct info
+            // 📌 Price Tags for Available Zones
+            const prices = {
+                "Pico-Robertson": "$5000",
+                "West Los Angeles": "$5000",
+                "Beverly Grove": "$5000",
+                "Baldwin Hills/Crenshaw": "$12000",
+                "Exposition Park": "$7000",
+                "Vermont Square": "$5000",
+                "Westchester": "$12000",
+                "Vermont-Slauson": "$12000",
+                "Glassell Park": "$5000",
+                "Beverly Crest": "$5000",
+                "Beverlywood": "$5000",
+                "Del Rey": "$10000",
+                "Lincoln Heights": "$7500",
+                "Montecito Heights": "$5000"
+            };
+
+            // 🖱️ Click Event: Show Price or Claimed Team
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
 
+                // ✅ Claimed Zones: Show Team Name
                 if (claimedZones[neighborhood]) {
                     new mapboxgl.Popup()
                         .setLngLat(e.lngLat)
@@ -155,23 +127,7 @@
                     return;
                 }
 
-                const prices = {
-                    "Pico-Robertson": "$5000",
-                    "West Los Angeles": "$5000",
-                    "Beverly Grove": "$5000",
-                    "Baldwin Hills/Crenshaw": "$12000",
-                    "Exposition Park": "$7000",
-                    "Vermont Square": "$5000",
-                    "Westchester": "$12000",
-                    "Vermont-Slauson": "$12000",
-                    "Glassell Park": "$5000",
-                    "Beverly Crest": "$5000",
-                    "Beverlywood": "$5000",
-                    "Del Rey": "$10000",
-                    "Lincoln Heights": "$7500",
-                    "Montecito Heights": "$5000"
-                };
-
+                // ✅ Available Zones: Show Price
                 const displayText = prices[neighborhood] ? `💰 ${prices[neighborhood]}` : "Inactive";
 
                 new mapboxgl.Popup()
