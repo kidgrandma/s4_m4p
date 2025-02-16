@@ -107,11 +107,11 @@
             'West Los Angeles', '#00ff00',
             'Baldwin Hills/Crenshaw', '#00ff00',
             'Vermont-Slauson', '#00ff00',
+            'Vermont Square', '#00ff00',
+            'Beverly Crest', '#00ff00',
+            'Montecito Heights', '#00ff00',
             // Available Areas with Prices (Cyan)
             'West Hollywood', '#0099ff',
-            'Vermont Square', '#0099ff',
-            'Beverly Crest', '#0099ff',
-            'Montecito Heights', '#0099ff',
             // Default for inactive areas:
             '#2a002a'
           ],
@@ -136,7 +136,6 @@
         { name: "Pico-Robertson", coords: [-118.431, 34.050], team: "veterans", label: "VETERAN 🏆" },
         { name: "Beverly Grove", coords: [-118.400, 34.073], team: "veterans", label: "VETERAN 🏆" },
         { name: "Glassell Park", coords: [-118.175, 34.107], team: "veterans", label: "VETERAN 🏆" },
-        // New Veterans Claims
         { name: "Lincoln Heights", coords: [-118.200, 34.030], team: "veterans", label: "VETERAN 🏆" },
         { name: "Beverlywood", coords: [-118.370, 34.085], team: "veterans", label: "VETERAN 🏆" },
         // Virgins (Green)
@@ -148,9 +147,12 @@
         { name: "Exposition Park", coords: [-118.288, 34.015], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Del Rey", coords: [-118.418, 33.980], team: "virgins", label: "VIRGINS 🏆" },
         { name: "West Los Angeles", coords: [-118.444, 34.045], team: "virgins", label: "VIRGINS 🏆" },
-        // New Virgins Claims
         { name: "Baldwin Hills/Crenshaw", coords: [-118.350, 34.000], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Vermont-Slauson", coords: [-118.260, 34.000], team: "virgins", label: "VIRGINS 🏆" }
+        { name: "Vermont-Slauson", coords: [-118.260, 34.000], team: "virgins", label: "VIRGINS 🏆" },
+        // New Virgins Claims
+        { name: "Vermont Square", coords: [-118.300, 34.028], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Beverly Crest", coords: [-118.380, 34.080], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Montecito Heights", coords: [-118.310, 34.040], team: "virgins", label: "VIRGINS 🏆" }
       ];
 
       claimedZones.forEach(zone => {
@@ -197,20 +199,14 @@
           case "West Los Angeles":
           case "Baldwin Hills/Crenshaw":
           case "Vermont-Slauson":
+          case "Vermont Square":
+          case "Beverly Crest":
+          case "Montecito Heights":
             displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
             break;
-          // Available Areas with Prices
+          // Available Area with Price
           case "West Hollywood": 
             displayText = "$7500"; 
-            break;
-          case "Vermont Square":
-            displayText = "$5000"; 
-            break;
-          case "Beverly Crest":
-            displayText = "$5000";
-            break;
-          case "Montecito Heights":
-            displayText = "$5000";
             break;
           default:
             displayText = "Inactive";
