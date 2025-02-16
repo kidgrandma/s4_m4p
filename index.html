@@ -10,29 +10,37 @@
     <style>
         body { margin: 0; padding: 0; background: black; }
         #map { width: 100vw; height: 100vh; }
+
         .mapboxgl-popup-content { 
             background: rgba(0, 0, 0, 0.8); 
             color: #0ff; 
             border: 1px solid #9900ff; 
             text-shadow: 0 0 5px #9900ff;
         }
+
+        /* 🏆 Circle Markers */
         .claimed-marker {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-weight: bold;
             text-align: center;
             border-radius: 50%;
-            border: 4px solid white;
-            font-size: 14px;
+            border: 3px solid white;
+            font-size: 12px;
             color: black;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
         }
+
+        /* 🌟 VETERANS = Bright Neon Pink */
         .veterans { 
             background: #ff00ff; 
             box-shadow: 0 0 20px #ff00ff;
         }
+
+        /* 🌿 VIRGINS = Bright Neon Green */
         .virgins { 
             background: #00ff00;
             box-shadow: 0 0 20px #00ff00;
@@ -56,7 +64,7 @@
                 data: 'https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson'
             });
 
-            // Cyber Grid: Brighter Blue for More Contrast
+            // 🌐 Cyber Grid: Blue for contrast
             map.addLayer({
                 id: 'neighborhood-borders',
                 type: 'line',
@@ -69,77 +77,7 @@
                 }
             });
 
-            // **Neighborhood Fill Colors: Claimed, Available, Inactive**
-            map.addLayer({
-                id: 'neighborhood-fill',
-                type: 'fill',
-                source: 'la-neighborhoods',
-                paint: {
-                    'fill-color': [
-                        'match',
-                        ['get', 'name'],
-                        // **CLAIMED AREAS (Veterans = Pink, Virgins = Green)**
-                        'Echo Park', '#ff00ff',  
-                        'Koreatown', '#ff00ff',
-                        'Westlake', '#ff00ff',
-                        'University Park', '#ff00ff',
-                        'Eagle Rock', '#ff00ff',
-                        'Highland Park', '#ff00ff',
-                        'Silver Lake', '#ff00ff',
-                        'Mar Vista', '#ff00ff',
-                        'Hancock Park', '#ff00ff',
-                        'Sawtelle', '#ff00ff',
-                        'San Pedro', '#ff00ff',
-                        'Los Feliz', '#00ff00',
-                        'Palms', '#00ff00',
-                        'West Adams', '#00ff00',
-                        'Mid-Wilshire', '#00ff00',
-                        // **AVAILABLE AREAS (Cyan - Higher Visibility)**
-                        'Pico-Robertson', '#00ffff',
-                        'West Los Angeles', '#00ffff',
-                        'Beverly Grove', '#00ffff',
-                        'Baldwin Hills/Crenshaw', '#00ffff',
-                        'Exposition Park', '#00ffff',
-                        'Vermont Square', '#00ffff',
-                        'Westchester', '#00ffff',
-                        'Vermont-Slauson', '#00ffff',
-                        'Glassell Park', '#00ffff',
-                        'Beverly Crest', '#00ffff',
-                        'Beverlywood', '#00ffff',
-                        'Del Rey', '#00ffff',
-                        'Lincoln Heights', '#00ffff',
-                        'Montecito Heights', '#00ffff',
-                        // **INACTIVE AREAS (Dark, Blended Background)**
-                        '#2a002a'
-                    ],
-                    'fill-opacity': [
-                        'match',
-                        ['get', 'name'],
-                        // **CLAIMED AREAS - 100% Visible**
-                        'Echo Park', 0.8,
-                        'Koreatown', 0.8,
-                        'Westlake', 0.8,
-                        'University Park', 0.8,
-                        'Eagle Rock', 0.8,
-                        'Highland Park', 0.8,
-                        'Silver Lake', 0.8,
-                        'Mar Vista', 0.8,
-                        'Hancock Park', 0.8,
-                        'Sawtelle', 0.8,
-                        'San Pedro', 0.8,
-                        'Los Feliz', 0.8,
-                        'Palms', 0.8,
-                        'West Adams', 0.8,
-                        'Mid-Wilshire', 0.8,
-                        // **AVAILABLE AREAS - 60% Opacity for Visibility**
-                        0.6,
-                        // **INACTIVE AREAS - Lower Opacity**
-                        0.3
-                    ]
-                }
-            });
-
-            // **PERMANENT MARKERS FOR CLAIMED AREAS**
+            // 🏡 Claimed Neighborhoods: Markers + Fill Colors
             const claimedZones = [
                 { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "🏆 VETERAN" },
                 { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "🏆 VETERAN" },
@@ -149,7 +87,7 @@
                 { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "🏆 VIRGINS" },
                 { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "🏆 VIRGINS" },
                 { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "🏆 VIRGINS" },
-                { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "🏆 VIRGINS" }
+                { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "🏆 VIRGINS" }
             ];
 
             claimedZones.forEach(zone => {
