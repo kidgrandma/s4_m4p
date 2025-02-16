@@ -70,7 +70,7 @@
                 }
             });
 
-            // Updated Neighborhood Statuses
+            // Neighborhood Fill Colors
             map.addLayer({
                 id: 'neighborhood-fill',
                 type: 'fill',
@@ -79,6 +79,7 @@
                     'fill-color': [
                         'match',
                         ['get', 'name'],
+                        // Veterans' claimed territories (Bright Pink)
                         'Echo Park', '#ff00ff',  
                         'Koreatown', '#ff00ff',
                         'Westlake', '#ff00ff',
@@ -86,15 +87,16 @@
                         'Eagle Rock', '#ff00ff',
                         'Highland Park', '#ff00ff',
                         'Silver Lake', '#ff00ff',
-                        'Mar Vista', '#ff00ff',
+                        'Mar Vista', '#ff00ff',  
                         'Hancock Park', '#ff00ff',
                         'Sawtelle', '#ff00ff',
                         'San Pedro', '#ff00ff',
+                        // Virgins' claimed territories (Bright Green)
                         'Los Feliz', '#00ff00',
                         'Palms', '#00ff00',
                         'West Adams', '#00ff00',
                         'Mid-Wilshire', '#00ff00',
-                        // Newly Activated Areas (Available for Purchase)
+                        // Newly Activated Areas (Available for Purchase - Cyan)
                         'Pico-Robertson', '#00ffff',
                         'West Los Angeles', '#00ffff',
                         'Beverly Grove', '#00ffff',
@@ -115,32 +117,43 @@
                 }
             });
 
-            // Permanent Markers for Claimed Areas
-            const claimedZones = [
-                { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Westlake", coords: [-118.2763, 34.0586], team: "veterans", label: "VETERAN 🏆" },
-                { name: "University Park", coords: [-118.2831, 34.0265], team: "veterans", label: "VETERAN 🏆" },
-                { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
-                { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
-                { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" },
-                { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" }
-            ];
+            // 🏆 Permanent Markers for Claimed Areas
+            const claimedZones = {
+                "Echo Park": { team: "veterans", label: "🏆 VETERAN" },
+                "Koreatown": { team: "veterans", label: "🏆 VETERAN" },
+                "Westlake": { team: "veterans", label: "🏆 VETERAN" },
+                "University Park": { team: "veterans", label: "🏆 VETERAN" },
+                "San Pedro": { team: "veterans", label: "🏆 VETERAN" },
+                "Sawtelle": { team: "veterans", label: "🏆 VETERAN" },  
+                "Mar Vista": { team: "veterans", label: "🏆 VETERAN" },  
+                "Los Feliz": { team: "virgins", label: "🏆 VIRGINS" },
+                "Palms": { team: "virgins", label: "🏆 VIRGINS" },
+                "West Adams": { team: "virgins", label: "🏆 VIRGINS" },
+                "Mid-Wilshire": { team: "virgins", label: "🏆 VIRGINS" }
+            };
 
-            claimedZones.forEach(zone => {
+            Object.entries(claimedZones).forEach(([name, { team, label }]) => {
                 const markerElement = document.createElement('div');
-                markerElement.className = `claimed-marker ${zone.team}`;
-                markerElement.innerText = zone.label;
+                markerElement.className = `claimed-marker ${team}`;
+                markerElement.innerText = label;
 
                 new mapboxgl.Marker(markerElement)
-                    .setLngLat(zone.coords)
+                    .setLngLat(map.querySourceFeatures('la-neighborhoods', { sourceLayer: 'neighborhood-fill' })
+                        .find(feature => feature.properties.name === name).geometry.coordinates)
                     .addTo(map);
             });
 
             // Click event: Show correct info
             map.on('click', 'neighborhood-fill', function (e) {
                 const neighborhood = e.features[0].properties.name || 'Unknown';
+
+                if (claimedZones[neighborhood]) {
+                    new mapboxgl.Popup()
+                        .setLngLat(e.lngLat)
+                        .setHTML(`<strong>${neighborhood}</strong><br><span style="color:${claimedZones[neighborhood].team === 'veterans' ? '#ff00ff' : '#00ff00'}; font-weight:bold;">${claimedZones[neighborhood].label}</span>`)
+                        .addTo(map);
+                    return;
+                }
 
                 const prices = {
                     "Pico-Robertson": "$5000",
