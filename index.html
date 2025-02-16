@@ -16,25 +16,6 @@
             border: 1px solid #9900ff; 
             text-shadow: 0 0 5px #9900ff;
         }
-        .claimed-marker {
-            width: 60px;
-            height: 60px;
-            color: black;
-            font-weight: bold;
-            text-align: center;
-            line-height: 60px;
-            border-radius: 50%;
-            border: 4px solid white;
-            font-size: 14px;
-        }
-        .veterans { 
-            background: #ff00ff; 
-            box-shadow: 0 0 20px #ff00ff;
-        }
-        .virgins { 
-            background: #00ff00;
-            box-shadow: 0 0 20px #00ff00;
-        }
     </style>
 </head>
 <body>
@@ -67,7 +48,7 @@
                 }
             });
 
-            // Neighborhood Fill Colors
+            // **Neighborhood Fill Colors with Stronger Contrast**
             map.addLayer({
                 id: 'neighborhood-fill',
                 type: 'fill',
@@ -91,36 +72,31 @@
                         'Palms', '#00ff00',
                         'West Adams', '#00ff00',
                         'Mid-Wilshire', '#00ff00',
-                        '#2a002a'
+                        // **NEW: More visible cyan for unclaimed areas**
+                        '#00ffff'
                     ],
-                    'fill-opacity': 0.5
+                    'fill-opacity': [
+                        'match',
+                        ['get', 'name'],
+                        'Echo Park', 0.7,
+                        'Koreatown', 0.7,
+                        'Westlake', 0.7,
+                        'University Park', 0.7,
+                        'Eagle Rock', 0.7,
+                        'Highland Park', 0.7,
+                        'Silver Lake', 0.7,
+                        'Mar Vista', 0.7,
+                        'Hancock Park', 0.7,
+                        'Sawtelle', 0.7,
+                        'San Pedro', 0.7,
+                        'Los Feliz', 0.7,
+                        'Palms', 0.7,
+                        'West Adams', 0.7,
+                        'Mid-Wilshire', 0.7,
+                        // **NEW: Higher visibility for unclaimed areas**
+                        0.4
+                    ]
                 }
-            });
-
-            // Permanent Markers for Claimed Areas
-            const claimedZones = [
-                { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Westlake", coords: [-118.2763, 34.0586], team: "veterans", label: "VETERAN 🏆" },
-                { name: "University Park", coords: [-118.2831, 34.0265], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Silver Lake", coords: [-118.2702, 34.0869], team: "veterans", label: "VETERAN 🏆" },
-                { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
-                { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
-                { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" },
-                { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" }
-            ];
-
-            claimedZones.forEach(zone => {
-                const markerElement = document.createElement('div');
-                markerElement.className = `claimed-marker ${zone.team}`;
-                markerElement.innerText = zone.label;
-
-                new mapboxgl.Marker(markerElement)
-                    .setLngLat(zone.coords)
-                    .addTo(map);
             });
 
             // Show Prices for Unclaimed Neighborhoods
@@ -152,6 +128,32 @@
                 new mapboxgl.Popup()
                     .setLngLat(e.lngLat)
                     .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
+                    .addTo(map);
+            });
+
+            // Permanent Markers for Claimed Areas
+            const claimedZones = [
+                { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Westlake", coords: [-118.2763, 34.0586], team: "veterans", label: "VETERAN 🏆" },
+                { name: "University Park", coords: [-118.2831, 34.0265], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Silver Lake", coords: [-118.2702, 34.0869], team: "veterans", label: "VETERAN 🏆" },
+                { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
+                { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
+                { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" },
+                { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" }
+            ];
+
+            claimedZones.forEach(zone => {
+                const markerElement = document.createElement('div');
+                markerElement.className = `claimed-marker ${zone.team}`;
+                markerElement.innerText = zone.label;
+
+                new mapboxgl.Marker(markerElement)
+                    .setLngLat(zone.coords)
                     .addTo(map);
             });
 
