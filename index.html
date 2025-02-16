@@ -70,32 +70,31 @@
                 }
             });
 
-// Updated Neighborhood Statuses
-map.addLayer({
-    id: 'neighborhood-fill',
-    type: 'fill',
-    source: 'la-neighborhoods',
-    paint: {
-        'fill-color': [
-            'match',
-            ['get', 'name'],
-            'Echo Park', '#ff00ff',  
-            'Koreatown', '#ff00ff',
-            'Westlake', '#ff00ff',
-            'University Park', '#ff00ff',
-            'Eagle Rock', '#ff00ff',
-            'Highland Park', '#ff00ff',
-            'Silver Lake', '#ff00ff',
-            'Mar Vista', '#ff00ff',
-            'Hancock Park', '#ff00ff',
-            'Sawtelle', '#ff00ff',
-            'San Pedro', '#ff00ff',  
-            'Los Feliz', '#00ff00',
-            'Palms', '#00ff00',
-            'West Adams', '#00ff00',
-            'Mid-Wilshire', '#00ff00',
-            'West Hollywood', '#0099ff',
-            // NEW AVAILABLE AREAS
+            // Updated Neighborhood Statuses
+            map.addLayer({
+                id: 'neighborhood-fill',
+                type: 'fill',
+                source: 'la-neighborhoods',
+                paint: {
+                    'fill-color': [
+                        'match',
+                        ['get', 'name'],
+                        'Echo Park', '#ff00ff',  
+                        'Koreatown', '#ff00ff',
+                        'Westlake', '#ff00ff',
+                        'University Park', '#ff00ff',
+                        'Eagle Rock', '#ff00ff',
+                        'Highland Park', '#ff00ff',
+                        'Silver Lake', '#ff00ff',
+                        'Mar Vista', '#ff00ff',
+                        'Hancock Park', '#ff00ff',
+                        'Sawtelle', '#ff00ff',
+                        'San Pedro', '#ff00ff',  // VETERANS CLAIMED
+                        'Los Feliz', '#00ff00',
+                        'Palms', '#00ff00',
+                        'West Adams', '#00ff00',
+                        'Mid-Wilshire', '#00ff00',
+                        'West Hollywood', '#0099ff',
             'Pico-Robertson', '#0099ff',
             'West Los Angeles', '#0099ff',
             'Beverly Grove', '#0099ff',
@@ -110,82 +109,99 @@ map.addLayer({
             'Del Rey', '#0099ff',
             'Lincoln Heights', '#0099ff',
             'Montecito Heights', '#0099ff',
-            '#2a002a'
-        ],
-        'fill-opacity': 0.5
-    }
-});
+                        '#2a002a'
+                    ],
+                    'fill-opacity': 0.5
+                }
+            });
 
-// Permanent Markers for Claimed Areas
-const claimedZones = [
-    { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN 🏆" },
-    { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN 🏆" },
-    { name: "Westlake", coords: [-118.2763, 34.0586], team: "veterans", label: "VETERAN 🏆" },
-    { name: "University Park", coords: [-118.2831, 34.0265], team: "veterans", label: "VETERAN 🏆" },
-    { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN 🏆" },
-    { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN 🏆" },
-    { name: "Silver Lake", coords: [-118.2702, 34.0869], team: "veterans", label: "VETERAN 🏆" },
-    { name: "Mar Vista", coords: [-118.4338, 34.0164], team: "veterans", label: "VETERAN 🏆" },
-    { name: "Hancock Park", coords: [-118.3287, 34.0745], team: "veterans", label: "VETERAN 🏆" },
-    { name: "Sawtelle", coords: [-118.4487, 34.0466], team: "veterans", label: "VETERAN 🏆" },
-    { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" }, 
-    { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
-    { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
-    { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" },
-    { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" }
-];
+            // Permanent Markers for Claimed Areas
+            const claimedZones = [
+                { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Westlake", coords: [-118.2763, 34.0586], team: "veterans", label: "VETERAN 🏆" },
+                { name: "University Park", coords: [-118.2831, 34.0265], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Silver Lake", coords: [-118.2702, 34.0869], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Mar Vista", coords: [-118.4338, 34.0164], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Hancock Park", coords: [-118.3287, 34.0745], team: "veterans", label: "VETERAN 🏆" },
+                { name: "Sawtelle", coords: [-118.4487, 34.0466], team: "veterans", label: "VETERAN 🏆" },
+                { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" }, // NEW CLAIMED
+                { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
+                { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
+                { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" },
+                { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" }
+            ];
 
-// Add markers for claimed zones
-claimedZones.forEach(zone => {
-    const markerElement = document.createElement('div');
-    markerElement.className = `claimed-marker ${zone.team}`;
-    markerElement.innerText = zone.label;
+            claimedZones.forEach(zone => {
+                const markerElement = document.createElement('div');
+                markerElement.className = claimed-marker ${zone.team};
+                markerElement.innerText = zone.label;
 
-    new mapboxgl.Marker(markerElement)
-        .setLngLat(zone.coords)
-        .addTo(map);
-});
-
-// 📌 Prices for Available Areas
-const prices = {
-    "Pico-Robertson": "$5000",
-    "West Los Angeles": "$5000",
-    "Beverly Grove": "$5000",
-    "Baldwin Hills/Crenshaw": "$12000",
-    "Exposition Park": "$7000",
-    "Vermont Square": "$5000",
-    "Westchester": "$12000",
-    "Vermont-Slauson": "$12000",
-    "Glassell Park": "$5000",
-    "Beverly Crest": "$5000",
-    "Beverlywood": "$5000",
-    "Del Rey": "$10000",
-    "Lincoln Heights": "$7500",
-    "Montecito Heights": "$5000"
-};
-
-// 🖱️ Click Event: Show correct info
-map.on('click', 'neighborhood-fill', function (e) {
-    const neighborhood = e.features[0].properties.name || 'Unknown';
-
-    let displayText;
-
-    // ✅ Show Team Name for Claimed Zones
-    if (claimedZones.some(zone => zone.name === neighborhood)) {
-        const zone = claimedZones.find(zone => zone.name === neighborhood);
-        displayText = `<span style="color:${zone.team === 'veterans' ? '#ff00ff' : '#00ff00'}; font-weight:bold;">${zone.label}</span>`;
-    } 
-    // ✅ Show Price for Available Zones
-    else if (prices[neighborhood]) {
-        displayText = `💰 ${prices[neighborhood]}`;
-    } 
-    // ❌ Mark as Inactive if not in the lists
-    else {
-        displayText = "Inactive";
-    }
+                new mapboxgl.Marker(markerElement)
+                    .setLngLat(zone.coords)
+                    .addTo(map);
+            });
 
     new mapboxgl.Popup()
         .setLngLat(e.lngLat)
-        .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
+        .setHTML(<strong>${neighborhood}</strong><br>Inactive)
         .addTo(map);
 });
+            // Click event: Show correct info
+            map.on('click', 'neighborhood-fill', function (e) {
+                const neighborhood = e.features[0].properties.name || 'Unknown';
+
+let displayText;
+switch (neighborhood) {
+    // 🏆 VETERANS Claimed
+    case "San Pedro":
+    case "Echo Park":
+    case "Koreatown":
+    case "Westlake":
+    case "University Park":
+    case "Eagle Rock":
+    case "Highland Park":
+    case "Silver Lake":
+    case "Mar Vista":
+    case "Hancock Park":
+    case "Sawtelle":
+        displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
+        break;
+
+    // 🏆 VIRGINS Claimed
+    case "Los Feliz":
+    case "Palms":
+    case "West Adams":
+    case "Mid-Wilshire":
+        displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
+        break;
+
+    // 💰 Available Areas with Prices
+    case "Pico-Robertson": displayText = "$5000"; break;
+    case "West Los Angeles": displayText = "$5000"; break;
+    case "Beverly Grove": displayText = "$5000"; break;
+    case "Baldwin Hills/Crenshaw": displayText = "$12000"; break;
+    case "Exposition Park": displayText = "$7000"; break;
+    case "Vermont Square": displayText = "$5000"; break;
+    case "Westchester": displayText = "$12000"; break;
+    case "Vermont-Slauson": displayText = "$12000"; break;
+    case "Glassell Park": displayText = "$5000"; break;
+    case "Beverly Crest": displayText = "$5000"; break;
+    case "Beverlywood": displayText = "$5000"; break;
+    case "Del Rey": displayText = "$10000"; break;
+    case "Lincoln Heights": displayText = "$7500"; break;
+    case "Montecito Heights": displayText = "$5000"; break;
+                    default: displayText = "Inactive";
+                }
+
+                new mapboxgl.Popup()
+                    .setLngLat(e.lngLat)
+                    .setHTML(<strong>${neighborhood}</strong><br>${displayText})
+                    .addTo(map);
+            });
+        });
+    </script>
+</body>
+</html>
