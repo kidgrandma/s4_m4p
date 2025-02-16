@@ -16,6 +16,25 @@
             border: 1px solid #9900ff; 
             text-shadow: 0 0 5px #9900ff;
         }
+        .claimed-marker {
+            width: 60px;
+            height: 60px;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+            line-height: 60px;
+            border-radius: 50%;
+            border: 4px solid white;
+            font-size: 14px;
+        }
+        .veterans { 
+            background: #ff00ff; 
+            box-shadow: 0 0 20px #ff00ff;
+        }
+        .virgins { 
+            background: #00ff00;
+            box-shadow: 0 0 20px #00ff00;
+        }
     </style>
 </head>
 <body>
@@ -48,52 +67,34 @@
                 }
             });
 
-            // Click event: Show correct info (Claimed zones + Prices)
-            map.on('click', 'neighborhood-fill', function (e) {
-                const neighborhood = e.features[0].properties.name || 'Unknown';
-
-                let displayText;
-                switch (neighborhood) {
-                    case "Echo Park":
-                    case "Koreatown":
-                    case "Westlake":
-                    case "University Park":
-                    case "Eagle Rock":
-                    case "Highland Park":
-                    case "Silver Lake":
-                    case "Mar Vista":
-                    case "Hancock Park":
-                    case "Sawtelle":
-                    case "San Pedro":
-                        displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
-                        break;
-                    case "Los Feliz":
-                    case "Palms":
-                    case "West Adams":
-                    case "Mid-Wilshire":
-                        displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
-                        break;
-                    case "Pico-Robertson": displayText = "💰 $5000"; break;
-                    case "West Los Angeles": displayText = "💰 $5000"; break;
-                    case "Beverly Grove": displayText = "💰 $5000"; break;
-                    case "Baldwin Hills/Crenshaw": displayText = "💰 $12000"; break;
-                    case "Exposition Park": displayText = "💰 $7000"; break;
-                    case "Vermont Square": displayText = "💰 $5000"; break;
-                    case "Westchester": displayText = "💰 $12000"; break;
-                    case "Vermont-Slauson": displayText = "💰 $12000"; break;
-                    case "Glassell Park": displayText = "💰 $5000"; break;
-                    case "Beverly Crest": displayText = "💰 $5000"; break;
-                    case "Beverlywood": displayText = "💰 $5000"; break;
-                    case "Del Rey": displayText = "💰 $10000"; break;
-                    case "Lincoln Heights": displayText = "💰 $7500"; break;
-                    case "Montecito Heights": displayText = "💰 $5000"; break;
-                    default: displayText = "Inactive";
+            // Neighborhood Fill Colors
+            map.addLayer({
+                id: 'neighborhood-fill',
+                type: 'fill',
+                source: 'la-neighborhoods',
+                paint: {
+                    'fill-color': [
+                        'match',
+                        ['get', 'name'],
+                        'Echo Park', '#ff00ff',  
+                        'Koreatown', '#ff00ff',
+                        'Westlake', '#ff00ff',
+                        'University Park', '#ff00ff',
+                        'Eagle Rock', '#ff00ff',
+                        'Highland Park', '#ff00ff',
+                        'Silver Lake', '#ff00ff',
+                        'Mar Vista', '#ff00ff',
+                        'Hancock Park', '#ff00ff',
+                        'Sawtelle', '#ff00ff',
+                        'San Pedro', '#ff00ff',
+                        'Los Feliz', '#00ff00',
+                        'Palms', '#00ff00',
+                        'West Adams', '#00ff00',
+                        'Mid-Wilshire', '#00ff00',
+                        '#2a002a'
+                    ],
+                    'fill-opacity': 0.5
                 }
-
-                new mapboxgl.Popup()
-                    .setLngLat(e.lngLat)
-                    .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
-                    .addTo(map);
             });
 
             // Permanent Markers for Claimed Areas
@@ -105,9 +106,6 @@
                 { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Silver Lake", coords: [-118.2702, 34.0869], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Mar Vista", coords: [-118.4338, 34.0164], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Hancock Park", coords: [-118.3287, 34.0745], team: "veterans", label: "VETERAN 🏆" },
-                { name: "Sawtelle", coords: [-118.4487, 34.0466], team: "veterans", label: "VETERAN 🏆" },
                 { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" },
                 { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
                 { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
@@ -122,6 +120,38 @@
 
                 new mapboxgl.Marker(markerElement)
                     .setLngLat(zone.coords)
+                    .addTo(map);
+            });
+
+            // Show Prices for Unclaimed Neighborhoods
+            map.on('click', 'neighborhood-fill', function (e) {
+                const neighborhood = e.features[0].properties.name || 'Unknown';
+
+                let displayText = "Inactive";
+                const prices = {
+                    "Pico-Robertson": "$5000",
+                    "West Los Angeles": "$5000",
+                    "Beverly Grove": "$5000",
+                    "Baldwin Hills/Crenshaw": "$12000",
+                    "Exposition Park": "$7000",
+                    "Vermont Square": "$5000",
+                    "Westchester": "$12000",
+                    "Vermont-Slauson": "$12000",
+                    "Glassell Park": "$5000",
+                    "Beverly Crest": "$5000",
+                    "Beverlywood": "$5000",
+                    "Del Rey": "$10000",
+                    "Lincoln Heights": "$7500",
+                    "Montecito Heights": "$5000"
+                };
+
+                if (prices[neighborhood]) {
+                    displayText = `💰 ${prices[neighborhood]}`;
+                }
+
+                new mapboxgl.Popup()
+                    .setLngLat(e.lngLat)
+                    .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
                     .addTo(map);
             });
 
