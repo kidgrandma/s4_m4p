@@ -11,7 +11,7 @@
     body { margin: 0; padding: 0; background: black; }
     #map { width: 100vw; height: 100vh; }
     .mapboxgl-popup-content {
-      background: rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.8);
       color: #0ff;
       border: 1px solid #9900ff;
       text-shadow: 0 0 5px #9900ff;
@@ -37,6 +37,14 @@
     .virgins { 
       background: #00ff00;
       box-shadow: 0 0 20px #00ff00;
+    }
+    /* Special territory marker styling */
+    .claimed-marker.special {
+      background: #ffa500;
+      color: black;
+      font-size: 12px;
+      border: 4px solid white;
+      padding: 4px;
     }
   </style>
 </head>
@@ -110,6 +118,9 @@
             'Vermont Square', '#00ff00',
             'Beverly Crest', '#00ff00',
             'Montecito Heights', '#00ff00',
+            // Special Territories (Orange)
+            'Hollywood Hills', '#ffa500',
+            'Hollywood Hills West', '#ffa500',
             // Available Areas with Prices (Cyan)
             'West Hollywood', '#0099ff',
             // Default for inactive areas:
@@ -149,8 +160,8 @@
         { name: "West Los Angeles", coords: [-118.444, 34.045], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Baldwin Hills/Crenshaw", coords: [-118.350, 34.000], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Vermont-Slauson", coords: [-118.260, 34.000], team: "virgins", label: "VIRGINS 🏆" },
-        // Updated Virgins Claims (Double-Checked Coordinates)
         { name: "Vermont Square", coords: [-118.270, 34.005], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Beverly Crest", coords: [-118.395, 34.080], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Montecito Heights", coords: [-118.190, 34.065], team: "virgins", label: "VIRGINS 🏆" }
       ];
 
@@ -163,7 +174,15 @@
           .addTo(map);
       });
 
-      // Popup click event
+      // Add a special marker for "20 auto mortgages" inside Hollywood Hills
+      const specialMarker = document.createElement('div');
+      specialMarker.className = 'claimed-marker special';
+      specialMarker.innerText = '20 auto mortgages';
+      new mapboxgl.Marker(specialMarker)
+          .setLngLat([-118.360, 34.117])  // Approximate center for Hollywood Hills
+          .addTo(map);
+
+      // Popup click event: update for special territories too
       map.on('click', 'neighborhood-fill', function (e) {
         const neighborhood = e.features[0].properties.name || 'Unknown';
         let displayText;
@@ -202,6 +221,11 @@
           case "Beverly Crest":
           case "Montecito Heights":
             displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
+            break;
+          // Special Territories (Hollywood Hills areas)
+          case "Hollywood Hills":
+          case "Hollywood Hills West":
+            displayText = `<span style="color:#ffa500; font-weight:bold;">SPECIAL TERRITORY</span>`;
             break;
           // Available area with price
           case "West Hollywood":
