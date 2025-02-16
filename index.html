@@ -94,14 +94,7 @@
                         'Palms', '#00ff00',
                         'West Adams', '#00ff00',
                         'Mid-Wilshire', '#00ff00',
-                                 'Pico-Robertson', '#0099ff',
-            'West Los Angeles', '#0099ff',
-            'Beverly Grove', '#0099ff',
-            'Baldwin Hills/Crenshaw', '#0099ff',
-            'Exposition Park', '#0099ff',
-            'Vermont Square', '#0099ff',
-            'Westchester', '#0099ff',
-            'Vermont-Slauson', '#0099ff',
+                        'West Hollywood', '#0099ff',
                         '#2a002a'
                     ],
                     'fill-opacity': 0.5
@@ -129,7 +122,7 @@
 
             claimedZones.forEach(zone => {
                 const markerElement = document.createElement('div');
-                markerElement.className = `claimed-marker ${zone.team}`;
+                markerElement.className = claimed-marker ${zone.team};
                 markerElement.innerText = zone.label;
 
                 new mapboxgl.Marker(markerElement)
@@ -154,30 +147,21 @@
                     case "Mar Vista":
                     case "Hancock Park":
                     case "Sawtelle":
-                        displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
+                        displayText = <span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>;
                         break;
                     case "Los Feliz":
                     case "Palms":
                     case "West Adams":
                     case "Mid-Wilshire":
-                        displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
+                        displayText = <span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>;
                         break;
-                            case "Pico-Robertson":
-        case "West Los Angeles":
-        case "Beverly Grove":
-        case "Vermont Square":
-            displayText = "$5000"; break;
-        case "Baldwin Hills/Crenshaw":
-        case "Westchester":
-        case "Vermont-Slauson":
-            displayText = "$12000"; break;
-            displayText = "Inactive";
-    }
+                    case "West Hollywood": displayText = "$7500"; break;
+                    default: displayText = "Inactive";
                 }
 
                 new mapboxgl.Popup()
                     .setLngLat(e.lngLat)
-                    .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
+                    .setHTML(<strong>${neighborhood}</strong><br>${displayText})
                     .addTo(map);
             });
         });
