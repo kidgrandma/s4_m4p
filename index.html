@@ -122,7 +122,7 @@
 
             claimedZones.forEach(zone => {
                 const markerElement = document.createElement('div');
-                markerElement.className = claimed-marker ${zone.team};
+                markerElement.className = `claimed-marker ${zone.team}`;
                 markerElement.innerText = zone.label;
 
                 new mapboxgl.Marker(markerElement)
@@ -147,13 +147,13 @@
                     case "Mar Vista":
                     case "Hancock Park":
                     case "Sawtelle":
-                        displayText = <span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>;
+                        displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
                         break;
                     case "Los Feliz":
                     case "Palms":
                     case "West Adams":
                     case "Mid-Wilshire":
-                        displayText = <span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>;
+                        displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
                         break;
                     case "West Hollywood": displayText = "$7500"; break;
                     default: displayText = "Inactive";
@@ -161,7 +161,7 @@
 
                 new mapboxgl.Popup()
                     .setLngLat(e.lngLat)
-                    .setHTML(<strong>${neighborhood}</strong><br>${displayText})
+                    .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
                     .addTo(map);
             });
         });
