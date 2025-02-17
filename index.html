@@ -11,7 +11,7 @@
     body { margin: 0; padding: 0; background: black; }
     #map { width: 100vw; height: 100vh; }
     .mapboxgl-popup-content {
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0,0,0,0.8);
       color: #0ff;
       border: 1px solid #9900ff;
       text-shadow: 0 0 5px #9900ff;
@@ -38,13 +38,10 @@
       background: #00ff00;
       box-shadow: 0 0 20px #00ff00;
     }
-    /* Special territory marker styling */
-    .claimed-marker.special {
+    /* (Optional) Style for unclaimed areas if you add markers later */
+    .unclaimed {
       background: #ffa500;
-      color: black;
-      font-size: 12px;
-      border: 4px solid white;
-      padding: 4px;
+      box-shadow: 0 0 20px #ffa500;
     }
   </style>
 </head>
@@ -78,7 +75,7 @@
         }
       });
 
-      // Updated Neighborhood Statuses (Fill Layer)
+      // Updated Neighborhood Fill Layer
       map.addLayer({
         id: 'neighborhood-fill',
         type: 'fill',
@@ -104,6 +101,8 @@
             'Glassell Park', '#ff00ff',
             'Lincoln Heights', '#ff00ff',
             'Beverlywood', '#ff00ff',
+            'Hollywood Hills', '#ff00ff',       // Now claimed by veterans
+            'Hollywood Hills West', '#ff00ff',    // Now claimed by veterans
             // Claimed by VIRGINS (Green)
             'Los Feliz', '#00ff00',
             'Palms', '#00ff00',
@@ -118,19 +117,14 @@
             'Vermont Square', '#00ff00',
             'Beverly Crest', '#00ff00',
             'Montecito Heights', '#00ff00',
-            // Special Territories (Orange)
-            'Hollywood Hills', '#ffa500',
-            'Hollywood Hills West', '#ffa500',
-            // Available Areas with Prices (Cyan)
-            'West Hollywood', '#0099ff',
-            // Default for inactive areas:
-            '#2a002a'
+            // Default for Unclaimed Areas: Orange
+            '#ffa500'
           ],
           'fill-opacity': 0.5
         }
       });
 
-      // Permanent Markers for Claimed Areas
+      // Claimed Zones Markers
       const claimedZones = [
         // Veterans (Pink)
         { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN 🏆" },
@@ -149,6 +143,8 @@
         { name: "Glassell Park", coords: [-118.175, 34.107], team: "veterans", label: "VETERAN 🏆" },
         { name: "Lincoln Heights", coords: [-118.200, 34.030], team: "veterans", label: "VETERAN 🏆" },
         { name: "Beverlywood", coords: [-118.370, 34.085], team: "veterans", label: "VETERAN 🏆" },
+        { name: "Hollywood Hills", coords: [-118.360, 34.117], team: "veterans", label: "VETERAN 🏆" },
+        { name: "Hollywood Hills West", coords: [-118.370, 34.117], team: "veterans", label: "VETERAN 🏆" },
         // Virgins (Green)
         { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
@@ -174,15 +170,7 @@
           .addTo(map);
       });
 
-      // Add a special marker for "20 auto mortgages" inside Hollywood Hills
-      const specialMarker = document.createElement('div');
-      specialMarker.className = 'claimed-marker special';
-      specialMarker.innerText = '20 auto mortgages';
-      new mapboxgl.Marker(specialMarker)
-          .setLngLat([-118.360, 34.117])  // Approximate center for Hollywood Hills
-          .addTo(map);
-
-      // Popup click event: update for special territories too
+      // Popup Click Event: For unclaimed areas, show "15 autos"
       map.on('click', 'neighborhood-fill', function (e) {
         const neighborhood = e.features[0].properties.name || 'Unknown';
         let displayText;
@@ -204,6 +192,8 @@
           case "Glassell Park":
           case "Lincoln Heights":
           case "Beverlywood":
+          case "Hollywood Hills":
+          case "Hollywood Hills West":
             displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
             break;
           // VIRGINS claimed areas
@@ -222,17 +212,9 @@
           case "Montecito Heights":
             displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
             break;
-          // Special Territories (Hollywood Hills areas)
-          case "Hollywood Hills":
-          case "Hollywood Hills West":
-            displayText = `<span style="color:#ffa500; font-weight:bold;">SPECIAL TERRITORY</span>`;
-            break;
-          // Available area with price
-          case "West Hollywood":
-            displayText = "$7500";
-            break;
+          // Default for Unclaimed Areas: 15 autos
           default:
-            displayText = "Inactive";
+            displayText = `<span style="color:#ffa500; font-weight:bold;">15 autos</span>`;
         }
         new mapboxgl.Popup()
           .setLngLat(e.lngLat)
