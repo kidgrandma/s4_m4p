@@ -38,7 +38,7 @@
       background: #00ff00;
       box-shadow: 0 0 20px #00ff00;
     }
-    /* (Optional) Style for unclaimed areas if you add markers later */
+    /* (Optional) Style for unclaimed areas */
     .unclaimed {
       background: #ffa500;
       box-shadow: 0 0 20px #ffa500;
@@ -106,13 +106,13 @@
             'Hollywood', '#ff00ff',
             'Venice', '#ff00ff',
             'Chinatown', '#ff00ff',
-            'Palisades', '#ff00ff',      // New VETERANS claim
-            'Sherman Oaks', '#ff00ff',    // New VETERANS claim
-            'Boyle Heights', '#ff00ff',    // New VETERANS claim
+            'Palisades', '#ff00ff',
+            'Sherman Oaks', '#ff00ff',
+            'Boyle Heights', '#ff00ff',
+            'West Adams', '#ff00ff',  // Moved to veterans
             // Claimed by VIRGINS (Green)
             'Los Feliz', '#00ff00',
             'Palms', '#00ff00',
-            'West Adams', '#00ff00',
             'Mid-Wilshire', '#00ff00',
             'Westchester', '#00ff00',
             'Exposition Park', '#00ff00',
@@ -126,9 +126,15 @@
             'East Hollywood', '#00ff00',
             'Mount Washington', '#00ff00',
             'Elysian Valley', '#00ff00',
-            'Westwood', '#00ff00',         // New VIRGINS claim
-            'Pico-Union', '#00ff00',       // New VIRGINS claim
-            'Atwater', '#00ff00',          // New VIRGINS claim
+            'Westwood', '#00ff00',
+            'Pico-Union', '#00ff00',
+            'Atwater', '#00ff00',
+            // New VIRGINS claims:
+            'Griffith Park', '#00ff00',
+            'Elysian Park', '#00ff00',
+            'Brentwood', '#00ff00',
+            'Wilmington', '#00ff00',
+            'Playa del Rey', '#00ff00',
             // Default for Unclaimed Areas: Orange
             '#ffa500'
           ],
@@ -160,14 +166,13 @@
         { name: "Hollywood", coords: [-118.326, 34.092], team: "veterans", label: "VETERAN 🏆" },
         { name: "Venice", coords: [-118.474, 33.985], team: "veterans", label: "VETERAN 🏆" },
         { name: "Chinatown", coords: [-118.237, 34.062], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Palisades", coords: [-118.513, 34.035], team: "veterans", label: "VETERAN 🏆" },       // New marker
-        { name: "Sherman Oaks", coords: [-118.451, 34.161], team: "veterans", label: "VETERAN 🏆" },     // New marker
-        { name: "Boyle Heights", coords: [-118.215, 34.034], team: "veterans", label: "VETERAN 🏆" },     // New marker
-
-        // VirgINS (Green)
+        { name: "Palisades", coords: [-118.513, 34.035], team: "veterans", label: "VETERAN 🏆" },
+        { name: "Sherman Oaks", coords: [-118.451, 34.161], team: "veterans", label: "VETERAN 🏆" },
+        { name: "Boyle Heights", coords: [-118.215, 34.034], team: "veterans", label: "VETERAN 🏆" },
+        { name: "West Adams", coords: [-118.335, 34.030], team: "veterans", label: "VETERAN 🏆" }, // Moved from virgins
+        // Virgins (Green)
         { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "West Adams", coords: [-118.3319, 34.0326], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Westchester", coords: [-118.410, 33.976], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Exposition Park", coords: [-118.288, 34.015], team: "virgins", label: "VIRGINS 🏆" },
@@ -181,9 +186,15 @@
         { name: "East Hollywood", coords: [-118.300, 34.092], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Mount Washington", coords: [-118.240, 34.110], team: "virgins", label: "VIRGINS 🏆" },
         { name: "Elysian Valley", coords: [-118.230, 34.073], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Westwood", coords: [-118.445, 34.063], team: "virgins", label: "VIRGINS 🏆" },      // New marker
-        { name: "Pico-Union", coords: [-118.258, 34.048], team: "virgins", label: "VIRGINS 🏆" },    // New marker
-        { name: "Atwater", coords: [-118.256, 34.084], team: "virgins", label: "VIRGINS 🏆" }        // New marker
+        { name: "Westwood", coords: [-118.445, 34.063], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Pico-Union", coords: [-118.258, 34.048], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Atwater", coords: [-118.256, 34.084], team: "virgins", label: "VIRGINS 🏆" },
+        // New VIRGINS claims:
+        { name: "Griffith Park", coords: [-118.293, 34.136], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Elysian Park", coords: [-118.250, 34.080], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Brentwood", coords: [-118.510, 34.055], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Wilmington", coords: [-118.260, 33.750], team: "virgins", label: "VIRGINS 🏆" },
+        { name: "Playa del Rey", coords: [-118.435, 33.980], team: "virgins", label: "VIRGINS 🏆" }
       ];
 
       claimedZones.forEach(zone => {
@@ -225,12 +236,12 @@
           case "Palisades":
           case "Sherman Oaks":
           case "Boyle Heights":
+          case "West Adams":
             displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
             break;
           // VIRGINS claimed areas
           case "Los Feliz":
           case "Palms":
-          case "West Adams":
           case "Mid-Wilshire":
           case "Westchester":
           case "Exposition Park":
@@ -247,6 +258,11 @@
           case "Westwood":
           case "Pico-Union":
           case "Atwater":
+          case "Griffith Park":
+          case "Elysian Park":
+          case "Brentwood":
+          case "Wilmington":
+          case "Playa del Rey":
             displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
             break;
           // Default for Unclaimed Areas: 15 autos
