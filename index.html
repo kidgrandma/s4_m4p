@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DA M4P</title>
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
@@ -11,12 +11,12 @@
     body { margin: 0; padding: 0; background: black; }
     #map { width: 100vw; height: 100vh; }
     .mapboxgl-popup-content {
-      background: rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.8);
       color: #0ff;
       border: 1px solid #9900ff;
       text-shadow: 0 0 5px #9900ff;
     }
-    /* Claimed Zone Markers */
+    /* Marker styling */
     .claimed-marker {
       width: 60px;
       height: 60px;
@@ -28,26 +28,16 @@
       border: 4px solid white;
       font-size: 14px;
     }
-    /* VETERANS team: Bright Neon Pink */
-    .veterans { 
-      background: #ff00ff; 
-      box-shadow: 0 0 20px #ff00ff;
-    }
-    /* VIRGINS team: Bright Neon Green */
-    .virgins { 
-      background: #00ff00;
-      box-shadow: 0 0 20px #00ff00;
-    }
-    /* (Optional) Style for unclaimed areas */
-    .unclaimed {
-      background: #ffa500;
-      box-shadow: 0 0 20px #ffa500;
-    }
+    /* Team colors */
+    .veterans { background: #ff00ff; box-shadow: 0 0 20px #ff00ff; }
+    .virgins  { background: #00ff00; box-shadow: 0 0 20px #00ff00; }
+    .unclaimed { background: #ffa500; box-shadow: 0 0 20px #ffa500; }
   </style>
 </head>
 <body>
   <div id="map"></div>
   <script>
+    // Mapbox access token and map initialization
     mapboxgl.accessToken = 'pk.eyJ1Ijoia2lkZ3JhbmRtYSIsImEiOiJjbTcxaXdyYmQwY213MnJvanh4em9lMTF5In0.HNoz7yMV2oamUgpdFCuZ7A';
     const map = new mapboxgl.Map({
       container: 'map',
@@ -56,222 +46,143 @@
       zoom: 11
     });
 
-    map.on('load', function () {
-      map.addSource('la-neighborhoods', {
-        type: 'geojson',
-        data: 'https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson'
+    // --- Centralized Territory Configuration ---
+    // Edit this object to update the status of each neighborhood.
+    // For an unclaimed neighborhood, either leave it out or assign team: "unclaimed"
+    const territoryAssignments = {
+      "Echo Park":         { team: "veterans", coords: [-118.2606, 34.0782], label: "VETERAN 🏆" },
+      "Koreatown":         { team: "veterans", coords: [-118.3009, 34.0595], label: "VETERAN 🏆" },
+      "Westlake":          { team: "veterans", coords: [-118.2763, 34.0586], label: "VETERAN 🏆" },
+      "University Park":   { team: "veterans", coords: [-118.2831, 34.0265], label: "VETERAN 🏆" },
+      "Eagle Rock":        { team: "veterans", coords: [-118.2085, 34.1392], label: "VETERAN 🏆" },
+      "Highland Park":     { team: "veterans", coords: [-118.1915, 34.1126], label: "VETERAN 🏆" },
+      "Silver Lake":       { team: "veterans", coords: [-118.2702, 34.0869], label: "VETERAN 🏆" },
+      "Mar Vista":         { team: "veterans", coords: [-118.4338, 34.0164], label: "VETERAN 🏆" },
+      "Hancock Park":      { team: "veterans", coords: [-118.3287, 34.0745], label: "VETERAN 🏆" },
+      "Sawtelle":          { team: "veterans", coords: [-118.4487, 34.0466], label: "VETERAN 🏆" },
+      "San Pedro":         { team: "veterans", coords: [-118.2922, 33.7361], label: "VETERAN 🏆" },
+      "Pico-Robertson":     { team: "veterans", coords: [-118.431, 34.050], label: "VETERAN 🏆" },
+      "Beverly Grove":     { team: "veterans", coords: [-118.400, 34.073], label: "VETERAN 🏆" },
+      "Glassell Park":     { team: "veterans", coords: [-118.175, 34.107], label: "VETERAN 🏆" },
+      "Lincoln Heights":   { team: "veterans", coords: [-118.200, 34.030], label: "VETERAN 🏆" },
+      "Beverlywood":       { team: "veterans", coords: [-118.370, 34.085], label: "VETERAN 🏆" },
+      "Hollywood Hills":   { team: "veterans", coords: [-118.360, 34.117], label: "VETERAN 🏆" },
+      "Hollywood Hills West": { team: "veterans", coords: [-118.370, 34.117], label: "VETERAN 🏆" },
+      "Hollywood":         { team: "veterans", coords: [-118.326, 34.092], label: "VETERAN 🏆" },
+      "Venice":            { team: "veterans", coords: [-118.474, 33.985], label: "VETERAN 🏆" },
+      "Chinatown":         { team: "veterans", coords: [-118.237, 34.062], label: "VETERAN 🏆" },
+      "Palisades":         { team: "veterans", coords: [-118.513, 34.035], label: "VETERAN 🏆" },
+      "Sherman Oaks":      { team: "veterans", coords: [-118.451, 34.161], label: "VETERAN 🏆" },
+      "Boyle Heights":     { team: "veterans", coords: [-118.215, 34.034], label: "VETERAN 🏆" },
+      "West Adams":        { team: "veterans", coords: [-118.335, 34.030], label: "VETERAN 🏆" },
+      
+      // VIRGINS assignments:
+      "Los Feliz":         { team: "virgins", coords: [-118.2910, 34.1063], label: "VIRGINS 🏆" },
+      "Palms":             { team: "virgins", coords: [-118.4075, 34.0259], label: "VIRGINS 🏆" },
+      "Mid-Wilshire":      { team: "virgins", coords: [-118.3391, 34.0614], label: "VIRGINS 🏆" },
+      "Westchester":       { team: "virgins", coords: [-118.410, 33.976], label: "VIRGINS 🏆" },
+      "Exposition Park":   { team: "virgins", coords: [-118.288, 34.015], label: "VIRGINS 🏆" },
+      "Del Rey":           { team: "virgins", coords: [-118.418, 33.980], label: "VIRGINS 🏆" },
+      "West Los Angeles":  { team: "virgins", coords: [-118.444, 34.045], label: "VIRGINS 🏆" },
+      "Baldwin Hills/Crenshaw": { team: "virgins", coords: [-118.350, 34.000], label: "VIRGINS 🏆" },
+      "Vermont-Slauson":   { team: "virgins", coords: [-118.260, 34.000], label: "VIRGINS 🏆" },
+      "Vermont Square":    { team: "virgins", coords: [-118.270, 34.005], label: "VIRGINS 🏆" },
+      "Beverly Crest":     { team: "virgins", coords: [-118.395, 34.080], label: "VIRGINS 🏆" },
+      "Montecito Heights": { team: "virgins", coords: [-118.190, 34.065], label: "VIRGINS 🏆" },
+      "East Hollywood":    { team: "virgins", coords: [-118.300, 34.092], label: "VIRGINS 🏆" },
+      "Mount Washington":  { team: "virgins", coords: [-118.240, 34.110], label: "VIRGINS 🏆" },
+      "Elysian Valley":     { team: "virgins", coords: [-118.230, 34.073], label: "VIRGINS 🏆" },
+      "Westwood":          { team: "virgins", coords: [-118.445, 34.063], label: "VIRGINS 🏆" },
+      "Pico-Union":        { team: "virgins", coords: [-118.258, 34.048], label: "VIRGINS 🏆" },
+      "Atwater":           { team: "virgins", coords: [-118.256, 34.084], label: "VIRGINS 🏆" },
+      // New VIRGINS claims:
+      "Griffith Park":     { team: "virgins", coords: [-118.293, 34.136], label: "VIRGINS 🏆" },
+      "Elysian Park":      { team: "virgins", coords: [-118.250, 34.080], label: "VIRGINS 🏆" },
+      "Brentwood":         { team: "virgins", coords: [-118.510, 34.055], label: "VIRGINS 🏆" },
+      "Wilmington":        { team: "virgins", coords: [-118.260, 33.750], label: "VIRGINS 🏆" },
+      "Playa del Rey":     { team: "virgins", coords: [-118.435, 33.980], label: "VIRGINS 🏆" }
+    };
+
+    // --- Helper Functions ---
+    // Return fill color based on team assignment.
+    function getFillColor(team) {
+      if (team === "veterans") return "#ff00ff";
+      if (team === "virgins") return "#00ff00";
+      return "#ffa500"; // unclaimed
+    }
+
+    // Build the Mapbox match expression dynamically from territoryAssignments.
+    const fillExpression = ["match", ["get", "name"]];
+    for (const name in territoryAssignments) {
+      fillExpression.push(name, getFillColor(territoryAssignments[name].team));
+    }
+    // Default color for neighborhoods not in our configuration.
+    fillExpression.push("#ffa500");
+
+    // --- Map Layers & Sources ---
+    map.on("load", function () {
+      // Add neighborhood boundaries source.
+      map.addSource("la-neighborhoods", {
+        type: "geojson",
+        data: "https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson"
       });
 
-      // Cyber Grid: Brighter Blue for More Contrast
+      // Add neighborhood borders.
       map.addLayer({
-        id: 'neighborhood-borders',
-        type: 'line',
-        source: 'la-neighborhoods',
+        id: "neighborhood-borders",
+        type: "line",
+        source: "la-neighborhoods",
         paint: {
-          'line-color': '#0099ff',
-          'line-width': 4,
-          'line-opacity': 0.8,
-          'line-blur': 1.5
+          "line-color": "#0099ff",
+          "line-width": 4,
+          "line-opacity": 0.8,
+          "line-blur": 1.5
         }
       });
 
-      // Updated Neighborhood Fill Layer
+      // Add neighborhood fill layer using the dynamic expression.
       map.addLayer({
-        id: 'neighborhood-fill',
-        type: 'fill',
-        source: 'la-neighborhoods',
+        id: "neighborhood-fill",
+        type: "fill",
+        source: "la-neighborhoods",
         paint: {
-          'fill-color': [
-            'match',
-            ['get', 'name'],
-            // Claimed by VETERANS (Pink)
-            'Echo Park', '#ff00ff',
-            'Koreatown', '#ff00ff',
-            'Westlake', '#ff00ff',
-            'University Park', '#ff00ff',
-            'Eagle Rock', '#ff00ff',
-            'Highland Park', '#ff00ff',
-            'Silver Lake', '#ff00ff',
-            'Mar Vista', '#ff00ff',
-            'Hancock Park', '#ff00ff',
-            'Sawtelle', '#ff00ff',
-            'San Pedro', '#ff00ff',
-            'Pico-Robertson', '#ff00ff',
-            'Beverly Grove', '#ff00ff',
-            'Glassell Park', '#ff00ff',
-            'Lincoln Heights', '#ff00ff',
-            'Beverlywood', '#ff00ff',
-            'Hollywood Hills', '#ff00ff',
-            'Hollywood Hills West', '#ff00ff',
-            'Hollywood', '#ff00ff',
-            'Venice', '#ff00ff',
-            'Chinatown', '#ff00ff',
-            'Palisades', '#ff00ff',
-            'Sherman Oaks', '#ff00ff',
-            'Boyle Heights', '#ff00ff',
-            'West Adams', '#ff00ff',  // Moved to veterans
-            // Claimed by VIRGINS (Green)
-            'Los Feliz', '#00ff00',
-            'Palms', '#00ff00',
-            'Mid-Wilshire', '#00ff00',
-            'Westchester', '#00ff00',
-            'Exposition Park', '#00ff00',
-            'Del Rey', '#00ff00',
-            'West Los Angeles', '#00ff00',
-            'Baldwin Hills/Crenshaw', '#00ff00',
-            'Vermont-Slauson', '#00ff00',
-            'Vermont Square', '#00ff00',
-            'Beverly Crest', '#00ff00',
-            'Montecito Heights', '#00ff00',
-            'East Hollywood', '#00ff00',
-            'Mount Washington', '#00ff00',
-            'Elysian Valley', '#00ff00',
-            'Westwood', '#00ff00',
-            'Pico-Union', '#00ff00',
-            'Atwater', '#00ff00',
-            // New VIRGINS claims:
-            'Griffith Park', '#00ff00',
-            'Elysian Park', '#00ff00',
-            'Brentwood', '#00ff00',
-            'Wilmington', '#00ff00',
-            'Playa del Rey', '#00ff00',
-            // Default for Unclaimed Areas: Orange
-            '#ffa500'
-          ],
-          'fill-opacity': 0.5
+          "fill-color": fillExpression,
+          "fill-opacity": 0.5
         }
       });
 
-      // Claimed Zones Markers
-      const claimedZones = [
-        // Veterans (Pink)
-        { name: "Echo Park", coords: [-118.2606, 34.0782], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Koreatown", coords: [-118.3009, 34.0595], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Westlake", coords: [-118.2763, 34.0586], team: "veterans", label: "VETERAN 🏆" },
-        { name: "University Park", coords: [-118.2831, 34.0265], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Eagle Rock", coords: [-118.2085, 34.1392], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Highland Park", coords: [-118.1915, 34.1126], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Silver Lake", coords: [-118.2702, 34.0869], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Mar Vista", coords: [-118.4338, 34.0164], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Hancock Park", coords: [-118.3287, 34.0745], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Sawtelle", coords: [-118.4487, 34.0466], team: "veterans", label: "VETERAN 🏆" },
-        { name: "San Pedro", coords: [-118.2922, 33.7361], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Pico-Robertson", coords: [-118.431, 34.050], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Beverly Grove", coords: [-118.400, 34.073], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Glassell Park", coords: [-118.175, 34.107], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Lincoln Heights", coords: [-118.200, 34.030], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Beverlywood", coords: [-118.370, 34.085], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Hollywood Hills", coords: [-118.360, 34.117], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Hollywood Hills West", coords: [-118.370, 34.117], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Hollywood", coords: [-118.326, 34.092], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Venice", coords: [-118.474, 33.985], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Chinatown", coords: [-118.237, 34.062], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Palisades", coords: [-118.513, 34.035], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Sherman Oaks", coords: [-118.451, 34.161], team: "veterans", label: "VETERAN 🏆" },
-        { name: "Boyle Heights", coords: [-118.215, 34.034], team: "veterans", label: "VETERAN 🏆" },
-        { name: "West Adams", coords: [-118.335, 34.030], team: "veterans", label: "VETERAN 🏆" }, // Moved from virgins
-        // Virgins (Green)
-        { name: "Los Feliz", coords: [-118.2910, 34.1063], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Palms", coords: [-118.4075, 34.0259], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Mid-Wilshire", coords: [-118.3391, 34.0614], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Westchester", coords: [-118.410, 33.976], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Exposition Park", coords: [-118.288, 34.015], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Del Rey", coords: [-118.418, 33.980], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "West Los Angeles", coords: [-118.444, 34.045], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Baldwin Hills/Crenshaw", coords: [-118.350, 34.000], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Vermont-Slauson", coords: [-118.260, 34.000], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Vermont Square", coords: [-118.270, 34.005], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Beverly Crest", coords: [-118.395, 34.080], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Montecito Heights", coords: [-118.190, 34.065], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "East Hollywood", coords: [-118.300, 34.092], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Mount Washington", coords: [-118.240, 34.110], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Elysian Valley", coords: [-118.230, 34.073], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Westwood", coords: [-118.445, 34.063], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Pico-Union", coords: [-118.258, 34.048], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Atwater", coords: [-118.256, 34.084], team: "virgins", label: "VIRGINS 🏆" },
-        // New VIRGINS claims:
-        { name: "Griffith Park", coords: [-118.293, 34.136], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Elysian Park", coords: [-118.250, 34.080], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Brentwood", coords: [-118.510, 34.055], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Wilmington", coords: [-118.260, 33.750], team: "virgins", label: "VIRGINS 🏆" },
-        { name: "Playa del Rey", coords: [-118.435, 33.980], team: "virgins", label: "VIRGINS 🏆" }
-      ];
+      // --- Create Markers from Configuration ---
+      for (const name in territoryAssignments) {
+        const entry = territoryAssignments[name];
+        if (entry.coords) {
+          const markerEl = document.createElement("div");
+          markerEl.className = "claimed-marker " + entry.team;
+          markerEl.innerText = entry.label;
+          new mapboxgl.Marker(markerEl)
+            .setLngLat(entry.coords)
+            .addTo(map);
+        }
+      }
 
-      claimedZones.forEach(zone => {
-        const markerElement = document.createElement('div');
-        markerElement.className = `claimed-marker ${zone.team}`;
-        markerElement.innerText = zone.label;
-        new mapboxgl.Marker(markerElement)
-          .setLngLat(zone.coords)
-          .addTo(map);
-      });
-
-      // Popup Click Event: For unclaimed areas, show "15 autos"
-      map.on('click', 'neighborhood-fill', function (e) {
-        const neighborhood = e.features[0].properties.name || 'Unknown';
+      // --- Popup Click Event ---
+      map.on("click", "neighborhood-fill", function (e) {
+        const nbhd = e.features[0].properties.name || "Unknown";
         let displayText;
-        switch (neighborhood) {
-          // VETERANS claimed areas
-          case "San Pedro":
-          case "Echo Park":
-          case "Koreatown":
-          case "Westlake":
-          case "University Park":
-          case "Eagle Rock":
-          case "Highland Park":
-          case "Silver Lake":
-          case "Mar Vista":
-          case "Hancock Park":
-          case "Sawtelle":
-          case "Pico-Robertson":
-          case "Beverly Grove":
-          case "Glassell Park":
-          case "Lincoln Heights":
-          case "Beverlywood":
-          case "Hollywood Hills":
-          case "Hollywood Hills West":
-          case "Hollywood":
-          case "Venice":
-          case "Chinatown":
-          case "Palisades":
-          case "Sherman Oaks":
-          case "Boyle Heights":
-          case "West Adams":
+        if (territoryAssignments[nbhd]) {
+          const team = territoryAssignments[nbhd].team;
+          if (team === "veterans") {
             displayText = `<span style="color:#ff00ff; font-weight:bold;">VETERAN 🏆</span>`;
-            break;
-          // VIRGINS claimed areas
-          case "Los Feliz":
-          case "Palms":
-          case "Mid-Wilshire":
-          case "Westchester":
-          case "Exposition Park":
-          case "Del Rey":
-          case "West Los Angeles":
-          case "Baldwin Hills/Crenshaw":
-          case "Vermont-Slauson":
-          case "Vermont Square":
-          case "Beverly Crest":
-          case "Montecito Heights":
-          case "East Hollywood":
-          case "Mount Washington":
-          case "Elysian Valley":
-          case "Westwood":
-          case "Pico-Union":
-          case "Atwater":
-          case "Griffith Park":
-          case "Elysian Park":
-          case "Brentwood":
-          case "Wilmington":
-          case "Playa del Rey":
+          } else if (team === "virgins") {
             displayText = `<span style="color:#00ff00; font-weight:bold;">VIRGINS 🏆</span>`;
-            break;
-          // Default for Unclaimed Areas: 15 autos
-          default:
+          } else {
             displayText = `<span style="color:#ffa500; font-weight:bold;">15 autos</span>`;
+          }
+        } else {
+          displayText = `<span style="color:#ffa500; font-weight:bold;">15 autos</span>`;
         }
         new mapboxgl.Popup()
           .setLngLat(e.lngLat)
-          .setHTML(`<strong>${neighborhood}</strong><br>${displayText}`)
+          .setHTML(`<strong>${nbhd}</strong><br>${displayText}`)
           .addTo(map);
       });
     });
