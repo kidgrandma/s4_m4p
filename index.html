@@ -21,9 +21,32 @@
     #controls {
       display: flex;
       justify-content: center;
+      gap: 20px;
       padding: 10px;
     }
-    .team { font-weight: bold; }
+    .team {
+      font-weight: bold;
+    }
+    .active-team {
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 0 0 10px white;
+      padding: 5px 15px;
+      border-radius: 10px;
+    }
+    .veterans-active {
+      background: #ff00ff;
+      color: black;
+    }
+    .virgins-active {
+      background: #00ff00;
+      color: black;
+    }
+    .neighborhood-labels {
+      font-size: 12px;
+      color: white;
+      text-shadow: 0 0 5px black;
+    }
   </style>
 </head>
 <body>
@@ -34,7 +57,7 @@
   <div id="controls">
     <button onclick="setCurrentTeam('veterans')">Score for Veterans</button>
     <button onclick="setCurrentTeam('virgins')">Score for Virgins</button>
-    <span>Current Team: <strong id="current-team">Veterans</strong></span>
+    <span id="current-team" class="active-team veterans-active">Veterans</span>
   </div>
   <div id="map"></div>
   <script>
@@ -59,22 +82,32 @@
       "Beverlywood": "veterans", "Hollywood Hills": "veterans", "Hollywood Hills West": "veterans",
       "Hollywood": "veterans", "Venice": "veterans", "Chinatown": "veterans",
       "Palisades": "veterans", "Sherman Oaks": "veterans", "Boyle Heights": "veterans",
-      "West Adams": "veterans",
-      
+      "West Adams": "veterans", "Brentwood": "veterans", "Pacific Palisades": "veterans",
+      "Century City": "veterans", "Cheviot Hills": "veterans", "Rancho Park": "veterans",
       "Los Feliz": "virgins", "Palms": "virgins", "Mid-Wilshire": "virgins",
       "Westchester": "virgins", "Exposition Park": "virgins", "Del Rey": "virgins",
       "West Los Angeles": "virgins", "Baldwin Hills/Crenshaw": "virgins", "Vermont-Slauson": "virgins",
       "Vermont Square": "virgins", "Beverly Crest": "virgins", "Montecito Heights": "virgins",
       "East Hollywood": "virgins", "Mount Washington": "virgins", "Elysian Valley": "virgins",
       "Westwood": "virgins", "Pico-Union": "virgins", "Atwater": "virgins",
-      "Griffith Park": "virgins", "Elysian Park": "virgins", "Brentwood": "virgins",
-      "Wilmington": "virgins", "Playa del Rey": "virgins"
-    };;
-    
+      "Griffith Park": "virgins", "Elysian Park": "virgins", "Wilmington": "virgins",
+      "Playa del Rey": "virgins", "Harbor Gateway": "virgins", "Watts": "virgins",
+      "Historic South-Central": "virgins", "South Park": "virgins", "Central-Alameda": "virgins",
+      "El Sereno": "virgins", "Cypress Park": "virgins"
+    };
+      "Echo Park": "veterans", "Koreatown": "veterans", "Westlake": "veterans",
+      "University Park": "veterans", "Eagle Rock": "veterans", "Highland Park": "veterans",
+      "Silver Lake": "veterans", "Mar Vista": "veterans", "Hancock Park": "veterans",
+      "Los Feliz": "virgins", "Palms": "virgins", "Mid-Wilshire": "virgins",
+      "Westchester": "virgins", "Exposition Park": "virgins", "Del Rey": "virgins"
+    };
+
     function updateScores() {
       document.getElementById("veterans-score").innerText = veteransScore;
       document.getElementById("virgins-score").innerText = virginsScore;
-      document.getElementById("current-team").innerText = currentTeam.charAt(0).toUpperCase() + currentTeam.slice(1);
+      const currentTeamElement = document.getElementById("current-team");
+      currentTeamElement.innerText = currentTeam.charAt(0).toUpperCase() + currentTeam.slice(1);
+      currentTeamElement.className = `active-team ${currentTeam === "veterans" ? "veterans-active" : "virgins-active"}`;
     }
 
     function setCurrentTeam(team) {
@@ -83,7 +116,7 @@
     }
 
     function handleNeighborhoodClick(nbhd) {
-      if (claimedAreas[nbhd]) return; // Already claimed, prevent selection
+      if (claimedAreas[nbhd]) return;
       
       if (currentTeam === "veterans" && veteransScore >= 10) {
         veteransScore -= 10;
@@ -127,12 +160,18 @@
       });
 
       map.addLayer({
-        id: "neighborhood-fill",
-        type: "fill",
+        id: "neighborhood-labels",
+        type: "symbol",
         source: "la-neighborhoods",
+        layout: {
+          "text-field": ["get", "name"],
+          "text-size": 12,
+          "text-anchor": "center"
+        },
         paint: {
-          "fill-color": "#ffa500",
-          "fill-opacity": 0.5
+          "text-color": "white",
+          "text-halo-color": "black",
+          "text-halo-width": 1
         }
       });
 
