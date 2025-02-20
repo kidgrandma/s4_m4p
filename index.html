@@ -8,17 +8,26 @@
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
   <style>
-    body { margin: 0; padding: 0; background: black; }
-    #map { width: 100vw; height: 100vh; }
-    .mapboxgl-popup-content {
-      background: rgba(0, 0, 0, 0.8);
-      color: #0ff;
-      border: 1px solid #9900ff;
-      text-shadow: 0 0 5px #9900ff;
+    body { margin: 0; padding: 0; background: black; color: white; font-family: Arial, sans-serif; }
+    #map { width: 100vw; height: 90vh; }
+    #scoreboard {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: #222;
+      padding: 10px;
+      font-size: 20px;
+    }
+    .team {
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
+  <div id="scoreboard">
+    <div class="team">Veterans: <span id="veterans-score">240</span> Autos</div>
+    <div class="team">Virgins: <span id="virgins-score">170</span> Autos</div>
+  </div>
   <div id="map"></div>
   <script>
     mapboxgl.accessToken = 'pk.eyJ1Ijoia2lkZ3JhbmRtYSIsImEiOiJjbTcxaXdyYmQwY213MnJvanh4em9lMTF5In0.HNoz7yMV2oamUgpdFCuZ7A';
@@ -29,19 +38,22 @@
       zoom: 11
     });
 
-    const fillExpression = ["match", ["get", "name"]];
-    const territoryAssignments = {
-      "Echo Park": "#ff00ff", "Koreatown": "#ff00ff", "Westlake": "#ff00ff",
-      "University Park": "#ff00ff", "Eagle Rock": "#ff00ff", "Highland Park": "#ff00ff",
-      "Silver Lake": "#ff00ff", "Mar Vista": "#ff00ff", "Hancock Park": "#ff00ff",
-      "Los Feliz": "#00ff00", "Palms": "#00ff00", "Mid-Wilshire": "#00ff00",
-      "Westchester": "#00ff00", "Exposition Park": "#00ff00", "Del Rey": "#00ff00"
-    };
-
-    for (const name in territoryAssignments) {
-      fillExpression.push(name, territoryAssignments[name]);
+    let veteransScore = 240;
+    let virginsScore = 170;
+    const mines = new Set();
+    
+    function updateScores() {
+      document.getElementById("veterans-score").innerText = veteransScore;
+      document.getElementById("virgins-score").innerText = virginsScore;
     }
-    fillExpression.push("#ffa500");
+
+    function placeMines(neighborhoods, minePercentage = 0.35) {
+      const mineCount = Math.floor(neighborhoods.length * minePercentage);
+      while (mines.size < mineCount) {
+        const randomNbhd = neighborhoods[Math.floor(Math.random() * neighborhoods.length)];
+        mines.add(randomNbhd);
+      }
+    }
 
     map.on("load", function () {
       map.addSource("la-neighborhoods", {
@@ -66,10 +78,17 @@
         type: "fill",
         source: "la-neighborhoods",
         paint: {
-          "fill-color": fillExpression,
+          "fill-color": "#ffa500",
           "fill-opacity": 0.5
         }
       });
+
+      fetch("https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson")
+        .then(response => response.json())
+        .then(data => {
+          const neighborhoods = data.features.map(f => f.properties.name);
+          placeMines(neighborhoods);
+        });
     });
   </script>
 </body>
