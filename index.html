@@ -54,7 +54,13 @@
     let virginsScore = 170;
     let currentTeam = "veterans";
     const mines = new Set();
-    const claimedAreas = {};
+    const claimedAreas = {
+      "Echo Park": "veterans", "Koreatown": "veterans", "Westlake": "veterans",
+      "University Park": "veterans", "Eagle Rock": "veterans", "Highland Park": "veterans",
+      "Silver Lake": "veterans", "Mar Vista": "veterans", "Hancock Park": "veterans",
+      "Los Feliz": "virgins", "Palms": "virgins", "Mid-Wilshire": "virgins",
+      "Westchester": "virgins", "Exposition Park": "virgins", "Del Rey": "virgins"
+    };
 
     function updateScores() {
       document.getElementById("veterans-score").innerText = veteransScore;
