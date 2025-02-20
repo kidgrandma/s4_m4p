@@ -32,10 +32,53 @@
     .veterans { background: #ff00ff; box-shadow: 0 0 20px #ff00ff; }
     .virgins  { background: #00ff00; box-shadow: 0 0 20px #00ff00; }
     .unclaimed { background: #ffa500; box-shadow: 0 0 20px #ffa500; }
+
+    /* Legend styling */
+    #legend {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      max-height: 90vh;
+      overflow-y: auto;
+      font-family: sans-serif;
+      font-size: 14px;
+      color: #000;
+      border-radius: 5px;
+      z-index: 1;
+    }
+    #legend h2 {
+      margin: 0 0 10px;
+    }
+    #legend .legend-section {
+      margin-bottom: 10px;
+    }
+    #legend ul {
+      list-style: none;
+      padding-left: 10px;
+      margin: 0;
+    }
   </style>
 </head>
 <body>
   <div id="map"></div>
+  <!-- Legend Panel -->
+  <div id="legend">
+    <h2>Map Legend</h2>
+    <div class="legend-section">
+      <h3 style="color:#ff00ff;">VETERAN</h3>
+      <ul id="legend-veterans"></ul>
+    </div>
+    <div class="legend-section">
+      <h3 style="color:#00ff00;">VIRGINS</h3>
+      <ul id="legend-virgins"></ul>
+    </div>
+    <div class="legend-section">
+      <h3 style="color:#ffa500;">SALE</h3>
+      <ul id="legend-sale"></ul>
+    </div>
+  </div>
   <script>
     // Mapbox access token and map initialization
     mapboxgl.accessToken = 'pk.eyJ1Ijoia2lkZ3JhbmRtYSIsImEiOiJjbTcxaXdyYmQwY213MnJvanh4em9lMTF5In0.HNoz7yMV2oamUgpdFCuZ7A';
@@ -49,400 +92,88 @@
     // --- Centralized Territory Configuration ---
     // For unclaimed neighborhoods we use team "unclaimed" and label "SALE".
     const territoryAssignments = {
-      "Echo Park": {
-        team: "veterans",
-        coords: [-118.2606, 34.0782],
-        label: "VETERAN"
-      },
-      "Koreatown": {
-        team: "veterans",
-        coords: [-118.2967, 34.0584],
-        label: "VETERAN"
-      },
-      "Westlake": {
-        team: "veterans",
-        coords: [-118.2761, 34.0603],
-        label: "VETERAN"
-      },
-      "University Park": {
-        team: "veterans",
-        coords: [-118.2809, 34.0259],
-        label: "VETERAN"
-      },
-      "Eagle Rock": {
-        team: "veterans",
-        coords: [-118.2120, 34.1378],
-        label: "VETERAN"
-      },
-      "Highland Park": {
-        team: "veterans",
-        coords: [-118.1875, 34.1105],
-        label: "VETERAN"
-      },
-      "Silver Lake": {
-        team: "veterans",
-        coords: [-118.2702, 34.0890],
-        label: "VETERAN"
-      },
-      "Mar Vista": {
-        team: "veterans",
-        coords: [-118.4308, 34.0029],
-        label: "VETERAN"
-      },
-      "Hancock Park": {
-        team: "veterans",
-        coords: [-118.3285, 34.0723],
-        label: "VETERAN"
-      },
-      "Sawtelle": {
-        team: "veterans",
-        coords: [-118.4459, 34.0439],
-        label: "VETERAN"
-      },
-      "San Pedro": {
-        team: "veterans",
-        coords: [-118.2923, 33.7365],
-        label: "VETERAN"
-      },
-      "Pico-Robertson": {
-        team: "veterans",
-        coords: [-118.3853, 34.0522],
-        label: "VETERAN"
-      },
-      "Beverly Grove": {
-        team: "veterans",
-        coords: [-118.3719, 34.0732],
-        label: "VETERAN"
-      },
-      "Glassell Park": {
-        team: "veterans",
-        coords: [-118.2333, 34.1072],
-        label: "VETERAN"
-      },
-      "Lincoln Heights": {
-        team: "veterans",
-        coords: [-118.2116, 34.0739],
-        label: "VETERAN"
-      },
-      "Beverlywood": {
-        team: "veterans",
-        coords: [-118.3981, 34.0528],
-        label: "VETERAN"
-      },
-      "Hollywood Hills": {
-        team: "veterans",
-        coords: [-118.3423, 34.1167],
-        label: "VETERAN"
-      },
-      "Hollywood Hills West": {
-        team: "veterans",
-        coords: [-118.3617, 34.1161],
-        label: "VETERAN"
-      },
-      "Hollywood": {
-        team: "veterans",
-        coords: [-118.3267, 34.0983],
-        label: "VETERAN"
-      },
-      "Venice": {
-        team: "veterans",
-        coords: [-118.4695, 33.9850],
-        label: "VETERAN"
-      },
-      "Chinatown": {
-        team: "veterans",
-        coords: [-118.2380, 34.0649],
-        label: "VETERAN"
-      },
-      "Pacific Palisades": {
-        team: "veterans",
-        coords: [-118.5240, 34.0392],
-        label: "VETERAN"
-      },
-      "Sherman Oaks": {
-        team: "veterans",
-        coords: [-118.4465, 34.1519],
-        label: "VETERAN"
-      },
-      "Boyle Heights": {
-        team: "veterans",
-        coords: [-118.2160, 34.0299],
-        label: "VETERAN"
-      },
-      "West Adams": {
-        team: "veterans",
-        coords: [-118.3003, 34.0327],
-        label: "VETERAN"
-      },
+      "Echo Park": { team: "veterans", coords: [-118.2606, 34.0782], label: "VETERAN" },
+      "Koreatown": { team: "veterans", coords: [-118.2967, 34.0584], label: "VETERAN" },
+      "Westlake": { team: "veterans", coords: [-118.2761, 34.0603], label: "VETERAN" },
+      "University Park": { team: "veterans", coords: [-118.2809, 34.0259], label: "VETERAN" },
+      "Eagle Rock": { team: "veterans", coords: [-118.2120, 34.1378], label: "VETERAN" },
+      "Highland Park": { team: "veterans", coords: [-118.1875, 34.1105], label: "VETERAN" },
+      "Silver Lake": { team: "veterans", coords: [-118.2702, 34.0890], label: "VETERAN" },
+      "Mar Vista": { team: "veterans", coords: [-118.4308, 34.0029], label: "VETERAN" },
+      "Hancock Park": { team: "veterans", coords: [-118.3285, 34.0723], label: "VETERAN" },
+      "Sawtelle": { team: "veterans", coords: [-118.4459, 34.0439], label: "VETERAN" },
+      "San Pedro": { team: "veterans", coords: [-118.2923, 33.7365], label: "VETERAN" },
+      "Pico-Robertson": { team: "veterans", coords: [-118.3853, 34.0522], label: "VETERAN" },
+      "Beverly Grove": { team: "veterans", coords: [-118.3719, 34.0732], label: "VETERAN" },
+      "Glassell Park": { team: "veterans", coords: [-118.2333, 34.1072], label: "VETERAN" },
+      "Lincoln Heights": { team: "veterans", coords: [-118.2116, 34.0739], label: "VETERAN" },
+      "Beverlywood": { team: "veterans", coords: [-118.3981, 34.0528], label: "VETERAN" },
+      "Hollywood Hills": { team: "veterans", coords: [-118.3423, 34.1167], label: "VETERAN" },
+      "Hollywood Hills West": { team: "veterans", coords: [-118.3617, 34.1161], label: "VETERAN" },
+      "Hollywood": { team: "veterans", coords: [-118.3267, 34.0983], label: "VETERAN" },
+      "Venice": { team: "veterans", coords: [-118.4695, 33.9850], label: "VETERAN" },
+      "Chinatown": { team: "veterans", coords: [-118.2380, 34.0649], label: "VETERAN" },
+      "Pacific Palisades": { team: "veterans", coords: [-118.5240, 34.0392], label: "VETERAN" },
+      "Sherman Oaks": { team: "veterans", coords: [-118.4465, 34.1519], label: "VETERAN" },
+      "Boyle Heights": { team: "veterans", coords: [-118.2160, 34.0299], label: "VETERAN" },
+      "West Adams": { team: "veterans", coords: [-118.3003, 34.0327], label: "VETERAN" },
 
       // VIRGINS
-      "Los Feliz": {
-        team: "virgins",
-        coords: [-118.2848, 34.1067],
-        label: "VIRGINS"
-      },
-      "Palms": {
-        team: "virgins",
-        coords: [-118.4072, 34.0256],
-        label: "VIRGINS"
-      },
-      "Mid-Wilshire": {
-        team: "virgins",
-        coords: [-118.3392, 34.0587],
-        label: "VIRGINS"
-      },
-      "Westchester": {
-        team: "virgins",
-        coords: [-118.3942, 33.9560],
-        label: "VIRGINS"
-      },
-      "Exposition Park": {
-        team: "virgins",
-        coords: [-118.2862, 34.0141],
-        label: "VIRGINS"
-      },
-      "Del Rey": {
-        team: "virgins",
-        coords: [-118.4241, 33.9853],
-        label: "VIRGINS"
-      },
-      "West Los Angeles": {
-        team: "virgins",
-        coords: [-118.4317, 34.0439],
-        label: "VIRGINS"
-      },
-      "Baldwin Hills/Crenshaw": {
-        team: "virgins",
-        coords: [-118.3493, 34.0061],
-        label: "VIRGINS"
-      },
-      "Vermont-Slauson": {
-        team: "virgins",
-        coords: [-118.2871, 33.9891],
-        label: "VIRGINS"
-      },
-      "Vermont Square": {
-        team: "virgins",
-        coords: [-118.2917, 34.0037],
-        label: "VIRGINS"
-      },
-      "Beverly Crest": {
-        team: "virgins",
-        coords: [-118.4004, 34.1012],
-        label: "VIRGINS"
-      },
-      "Montecito Heights": {
-        team: "virgins",
-        coords: [-118.2055, 34.0884],
-        label: "VIRGINS"
-      },
-      "East Hollywood": {
-        team: "virgins",
-        coords: [-118.2934, 34.0912],
-        label: "VIRGINS"
-      },
-      "Mount Washington": {
-        team: "virgins",
-        coords: [-118.2203, 34.0998],
-        label: "VIRGINS"
-      },
-      "Elysian Valley": {
-        team: "virgins",
-        coords: [-118.2515, 34.0950],
-        label: "VIRGINS"
-      },
-      "Westwood": {
-        team: "virgins",
-        coords: [-118.4441, 34.0635],
-        label: "VIRGINS"
-      },
-      "Pico-Union": {
-        team: "virgins",
-        coords: [-118.2760, 34.0480],
-        label: "VIRGINS"
-      },
-      "Atwater Village": {
-        team: "virgins",
-        coords: [-118.2611, 34.1172],
-        label: "VIRGINS"
-      },
-      "Griffith Park": {
-        team: "virgins",
-        coords: [-118.2937, 34.1341],
-        label: "VIRGINS"
-      },
-      "Elysian Park": {
-        team: "virgins",
-        coords: [-118.2361, 34.0821],
-        label: "VIRGINS"
-      },
-      "Brentwood": {
-        team: "virgins",
-        coords: [-118.4795, 34.0528],
-        label: "VIRGINS"
-      },
-      "Wilmington": {
-        team: "virgins",
-        coords: [-118.2615, 33.7858],
-        label: "VIRGINS"
-      },
-      "Playa del Rey": {
-        team: "virgins",
-        coords: [-118.4471, 33.9560],
-        label: "VIRGINS"
-      },
+      "Los Feliz": { team: "virgins", coords: [-118.2848, 34.1067], label: "VIRGINS" },
+      "Palms": { team: "virgins", coords: [-118.4072, 34.0256], label: "VIRGINS" },
+      "Mid-Wilshire": { team: "virgins", coords: [-118.3392, 34.0587], label: "VIRGINS" },
+      "Westchester": { team: "virgins", coords: [-118.3942, 33.9560], label: "VIRGINS" },
+      "Exposition Park": { team: "virgins", coords: [-118.2862, 34.0141], label: "VIRGINS" },
+      "Del Rey": { team: "virgins", coords: [-118.4241, 33.9853], label: "VIRGINS" },
+      "West Los Angeles": { team: "virgins", coords: [-118.4317, 34.0439], label: "VIRGINS" },
+      "Baldwin Hills/Crenshaw": { team: "virgins", coords: [-118.3493, 34.0061], label: "VIRGINS" },
+      "Vermont-Slauson": { team: "virgins", coords: [-118.2871, 33.9891], label: "VIRGINS" },
+      "Vermont Square": { team: "virgins", coords: [-118.2917, 34.0037], label: "VIRGINS" },
+      "Beverly Crest": { team: "virgins", coords: [-118.4004, 34.1012], label: "VIRGINS" },
+      "Montecito Heights": { team: "virgins", coords: [-118.2055, 34.0884], label: "VIRGINS" },
+      "East Hollywood": { team: "virgins", coords: [-118.2934, 34.0912], label: "VIRGINS" },
+      "Mount Washington": { team: "virgins", coords: [-118.2203, 34.0998], label: "VIRGINS" },
+      "Elysian Valley": { team: "virgins", coords: [-118.2515, 34.0950], label: "VIRGINS" },
+      "Westwood": { team: "virgins", coords: [-118.4441, 34.0635], label: "VIRGINS" },
+      "Pico-Union": { team: "virgins", coords: [-118.2760, 34.0480], label: "VIRGINS" },
+      "Atwater Village": { team: "virgins", coords: [-118.2611, 34.1172], label: "VIRGINS" },
+      "Griffith Park": { team: "virgins", coords: [-118.2937, 34.1341], label: "VIRGINS" },
+      "Elysian Park": { team: "virgins", coords: [-118.2361, 34.0821], label: "VIRGINS" },
+      "Brentwood": { team: "virgins", coords: [-118.4795, 34.0528], label: "VIRGINS" },
+      "Wilmington": { team: "virgins", coords: [-118.2615, 33.7858], label: "VIRGINS" },
+      "Playa del Rey": { team: "virgins", coords: [-118.4471, 33.9560], label: "VIRGINS" },
 
-      // --- New "For Sale" Entries (Unclaimed, No Marker) ---
-      "Bel-Air": {
-        team: "unclaimed",
-        coords: [-118.4165, 34.0837],
-        label: "SALE"
-      },
-      "Century City": {
-        team: "unclaimed",
-        coords: [-118.4108, 34.0624],
-        label: "SALE"
-      },
-      "Cheviot Hills": {
-        team: "unclaimed",
-        coords: [-118.4200, 34.0440],
-        label: "SALE"
-      },
-      "Rancho Park": {
-        team: "unclaimed",
-        coords: [-118.4350, 34.0350],
-        label: "SALE"
-      },
-      "Mid-City": {
-        team: "unclaimed",
-        coords: [-118.3400, 34.0400],
-        label: "SALE"
-      },
-      "Playa Vista": {
-        team: "unclaimed",
-        coords: [-118.4167, 33.9750],
-        label: "SALE"
-      },
-      "Jefferson Park": {
-        team: "unclaimed",
-        coords: [-118.3070, 34.0120],
-        label: "SALE"
-      },
-      "Carthay": {
-        team: "unclaimed",
-        coords: [-118.3620, 34.0910],
-        label: "SALE"
-      },
-      "Harvard Heights": {
-        team: "unclaimed",
-        coords: [-118.3000, 34.0500],
-        label: "SALE"
-      },
-      "Larchmont": {
-        team: "unclaimed",
-        coords: [-118.3530, 34.0980],
-        label: "SALE"
-      },
-      "Fairfax": {
-        team: "unclaimed",
-        coords: [-118.3610, 34.0830],
-        label: "SALE"
-      },
-      "Adams-Normandie": {
-        team: "unclaimed",
-        coords: [-118.3050, 34.0280],
-        label: "SALE"
-      },
-      "Leimert Park": {
-        team: "unclaimed",
-        coords: [-118.3600, 34.0330],
-        label: "SALE"
-      },
-      "Hyde Park": {
-        team: "unclaimed",
-        coords: [-118.2800, 34.0000],
-        label: "SALE"
-      },
-      "Chesterfield Square": {
-        team: "unclaimed",
-        coords: [-118.3300, 34.0650],
-        label: "SALE"
-      },
-      "Harvard Park": {
-        team: "unclaimed",
-        coords: [-118.2700, 34.0450],
-        label: "SALE"
-      },
-      "Manchester Square": {
-        team: "unclaimed",
-        coords: [-118.3000, 34.0450],
-        label: "SALE"
-      },
-      "Gramercy Park": {
-        team: "unclaimed",
-        coords: [-118.3500, 34.0800],
-        label: "SALE"
-      },
-      "Vermont Knolls": {
-        team: "unclaimed",
-        coords: [-118.2900, 34.0100],
-        label: "SALE"
-      },
-      "Vermont Vista": {
-        team: "unclaimed",
-        coords: [-118.2800, 34.0050],
-        label: "SALE"
-      },
-      "Green Meadows": {
-        team: "unclaimed",
-        coords: [-118.3000, 34.0000],
-        label: "SALE"
-      },
-      "Florence": {
-        team: "unclaimed",
-        coords: [-118.3200, 34.0000],
-        label: "SALE"
-      },
-      "Broadway-Manchester": {
-        team: "unclaimed",
-        coords: [-118.2800, 34.0450],
-        label: "SALE"
-      },
-      "Harbor Gateway": {
-        team: "unclaimed",
-        coords: [-118.3080, 33.9800],
-        label: "SALE"
-      },
-      "Watts": {
-        team: "unclaimed",
-        coords: [-118.2200, 33.9400],
-        label: "SALE"
-      },
-      "Historic South-Central": {
-        team: "unclaimed",
-        coords: [-118.2500, 34.0000],
-        label: "SALE"
-      },
-      "South Park": {
-        team: "unclaimed",
-        coords: [-118.2600, 33.9900],
-        label: "SALE"
-      },
-      "Central-Alameda": {
-        team: "unclaimed",
-        coords: [-118.2600, 34.0000],
-        label: "SALE"
-      },
-      "El Sereno": {
-        team: "unclaimed",
-        coords: [-118.1800, 34.0700],
-        label: "SALE"
-      },
-      "Cypress Park": {
-        team: "unclaimed",
-        coords: [-118.2050, 34.1000],
-        label: "SALE"
-      }
+      // New "For Sale" Entries (Unclaimed; no marker is created)
+      "Bel-Air": { team: "unclaimed", coords: [-118.4165, 34.0837], label: "SALE" },
+      "Century City": { team: "unclaimed", coords: [-118.4108, 34.0624], label: "SALE" },
+      "Cheviot Hills": { team: "unclaimed", coords: [-118.4200, 34.0440], label: "SALE" },
+      "Rancho Park": { team: "unclaimed", coords: [-118.4350, 34.0350], label: "SALE" },
+      "Mid-City": { team: "unclaimed", coords: [-118.3400, 34.0400], label: "SALE" },
+      "Playa Vista": { team: "unclaimed", coords: [-118.4167, 33.9750], label: "SALE" },
+      "Jefferson Park": { team: "unclaimed", coords: [-118.3070, 34.0120], label: "SALE" },
+      "Carthay": { team: "unclaimed", coords: [-118.3620, 34.0910], label: "SALE" },
+      "Harvard Heights": { team: "unclaimed", coords: [-118.3000, 34.0500], label: "SALE" },
+      "Larchmont": { team: "unclaimed", coords: [-118.3530, 34.0980], label: "SALE" },
+      "Fairfax": { team: "unclaimed", coords: [-118.3610, 34.0830], label: "SALE" },
+      "Adams-Normandie": { team: "unclaimed", coords: [-118.3050, 34.0280], label: "SALE" },
+      "Leimert Park": { team: "unclaimed", coords: [-118.3600, 34.0330], label: "SALE" },
+      "Hyde Park": { team: "unclaimed", coords: [-118.2800, 34.0000], label: "SALE" },
+      "Chesterfield Square": { team: "unclaimed", coords: [-118.3300, 34.0650], label: "SALE" },
+      "Harvard Park": { team: "unclaimed", coords: [-118.2700, 34.0450], label: "SALE" },
+      "Manchester Square": { team: "unclaimed", coords: [-118.3000, 34.0450], label: "SALE" },
+      "Gramercy Park": { team: "unclaimed", coords: [-118.3500, 34.0800], label: "SALE" },
+      "Vermont Knolls": { team: "unclaimed", coords: [-118.2900, 34.0100], label: "SALE" },
+      "Vermont Vista": { team: "unclaimed", coords: [-118.2800, 34.0050], label: "SALE" },
+      "Green Meadows": { team: "unclaimed", coords: [-118.3000, 34.0000], label: "SALE" },
+      "Florence": { team: "unclaimed", coords: [-118.3200, 34.0000], label: "SALE" },
+      "Broadway-Manchester": { team: "unclaimed", coords: [-118.2800, 34.0450], label: "SALE" },
+      "Harbor Gateway": { team: "unclaimed", coords: [-118.3080, 33.9800], label: "SALE" },
+      "Watts": { team: "unclaimed", coords: [-118.2200, 33.9400], label: "SALE" },
+      "Historic South-Central": { team: "unclaimed", coords: [-118.2500, 34.0000], label: "SALE" },
+      "South Park": { team: "unclaimed", coords: [-118.2600, 33.9900], label: "SALE" },
+      "Central-Alameda": { team: "unclaimed", coords: [-118.2600, 34.0000], label: "SALE" },
+      "El Sereno": { team: "unclaimed", coords: [-118.1800, 34.0700], label: "SALE" },
+      "Cypress Park": { team: "unclaimed", coords: [-118.2050, 34.1000], label: "SALE" }
     };
 
     // --- Helper Functions ---
@@ -526,6 +257,27 @@
           .setHTML(`<strong>${nbhd}</strong><br>${displayText}`)
           .addTo(map);
       });
+
+      // --- Build Legend Panel ---
+      function buildLegend() {
+        const veteransList = [];
+        const virginsList = [];
+        const saleList = [];
+        for (const name in territoryAssignments) {
+          const entry = territoryAssignments[name];
+          if (entry.team === "veterans") {
+            veteransList.push(name);
+          } else if (entry.team === "virgins") {
+            virginsList.push(name);
+          } else if (entry.team === "unclaimed") {
+            saleList.push(name);
+          }
+        }
+        document.getElementById("legend-veterans").innerHTML = veteransList.map(item => "<li>" + item + "</li>").join("");
+        document.getElementById("legend-virgins").innerHTML = virginsList.map(item => "<li>" + item + "</li>").join("");
+        document.getElementById("legend-sale").innerHTML = saleList.map(item => "<li>" + item + "</li>").join("");
+      }
+      buildLegend();
     });
   </script>
 </body>
