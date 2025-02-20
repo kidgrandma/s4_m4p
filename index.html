@@ -47,7 +47,7 @@
     });
 
     // --- Centralized Territory Configuration ---
-    // For unclaimed neighborhoods we use team "unclaimed" and label "FOR SALE".
+    // For unclaimed neighborhoods we use team "unclaimed" and label "SALE".
     const territoryAssignments = {
       "Echo Park": {
         team: "veterans",
@@ -292,169 +292,167 @@
         label: "VIRGINS 🏆"
       },
 
-      // --- New "For Sale" Entries (Unclaimed, Orange Markers) ---
+      // --- New "For Sale" Entries (Unclaimed, No Marker) ---
       "Bel-Air": {
         team: "unclaimed",
         coords: [-118.4165, 34.0837],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Century City": {
         team: "unclaimed",
         coords: [-118.4108, 34.0624],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Cheviot Hills": {
         team: "unclaimed",
         coords: [-118.4200, 34.0440],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Rancho Park": {
         team: "unclaimed",
         coords: [-118.4350, 34.0350],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Mid-City": {
         team: "unclaimed",
         coords: [-118.3400, 34.0400],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Playa Vista": {
         team: "unclaimed",
         coords: [-118.4167, 33.9750],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Jefferson Park": {
         team: "unclaimed",
         coords: [-118.3070, 34.0120],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Carthay": {
         team: "unclaimed",
         coords: [-118.3620, 34.0910],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Harvard Heights": {
         team: "unclaimed",
         coords: [-118.3000, 34.0500],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Larchmont": {
         team: "unclaimed",
         coords: [-118.3530, 34.0980],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Fairfax": {
         team: "unclaimed",
         coords: [-118.3610, 34.0830],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Adams-Normandie": {
         team: "unclaimed",
         coords: [-118.3050, 34.0280],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Leimert Park": {
         team: "unclaimed",
         coords: [-118.3600, 34.0330],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Hyde Park": {
         team: "unclaimed",
         coords: [-118.2800, 34.0000],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Chesterfield Square": {
         team: "unclaimed",
         coords: [-118.3300, 34.0650],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Harvard Park": {
         team: "unclaimed",
         coords: [-118.2700, 34.0450],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Manchester Square": {
         team: "unclaimed",
         coords: [-118.3000, 34.0450],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Gramercy Park": {
         team: "unclaimed",
         coords: [-118.3500, 34.0800],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Vermont Knolls": {
         team: "unclaimed",
         coords: [-118.2900, 34.0100],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Vermont Vista": {
         team: "unclaimed",
         coords: [-118.2800, 34.0050],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Green Meadows": {
         team: "unclaimed",
         coords: [-118.3000, 34.0000],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Florence": {
         team: "unclaimed",
         coords: [-118.3200, 34.0000],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Broadway-Manchester": {
         team: "unclaimed",
         coords: [-118.2800, 34.0450],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Harbor Gateway": {
         team: "unclaimed",
         coords: [-118.3080, 33.9800],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Watts": {
         team: "unclaimed",
         coords: [-118.2200, 33.9400],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Historic South-Central": {
         team: "unclaimed",
         coords: [-118.2500, 34.0000],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "South Park": {
         team: "unclaimed",
         coords: [-118.2600, 33.9900],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Central-Alameda": {
         team: "unclaimed",
         coords: [-118.2600, 34.0000],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "El Sereno": {
         team: "unclaimed",
         coords: [-118.1800, 34.0700],
-        label: "FOR SALE"
+        label: "SALE"
       },
       "Cypress Park": {
         team: "unclaimed",
         coords: [-118.2050, 34.1000],
-        label: "FOR SALE"
+        label: "SALE"
       }
     };
 
     // --- Helper Functions ---
-    // Return fill color based on team assignment.
     function getFillColor(team) {
       if (team === "veterans") return "#ff00ff";
       if (team === "virgins") return "#00ff00";
-      if (team === "unclaimed") return "#ffa500"; // For sale markers remain orange
-      return "#ffa500"; // default for unclaimed in config
+      if (team === "unclaimed") return "#ffa500";
+      return "#ffa500";
     }
 
-    // Build the Mapbox match expression dynamically from territoryAssignments.
     const fillExpression = ["match", ["get", "name"]];
     for (const name in territoryAssignments) {
       fillExpression.push(name, getFillColor(territoryAssignments[name].team));
@@ -464,13 +462,11 @@
 
     // --- Map Layers & Sources ---
     map.on("load", function () {
-      // Add neighborhood boundaries source.
       map.addSource("la-neighborhoods", {
         type: "geojson",
         data: "https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson"
       });
 
-      // Add neighborhood borders.
       map.addLayer({
         id: "neighborhood-borders",
         type: "line",
@@ -483,7 +479,6 @@
         }
       });
 
-      // Add neighborhood fill layer using the dynamic expression.
       map.addLayer({
         id: "neighborhood-fill",
         type: "fill",
@@ -494,10 +489,11 @@
         }
       });
 
-      // --- Create Markers from Configuration ---
+      // --- Create Markers for Claimed Territories Only ---
       for (const name in territoryAssignments) {
         const entry = territoryAssignments[name];
-        if (entry.coords) {
+        // Only create markers for territories that are not "unclaimed"
+        if (entry.coords && entry.team !== "unclaimed") {
           const markerEl = document.createElement("div");
           markerEl.className = "claimed-marker " + entry.team;
           markerEl.innerText = entry.label;
@@ -522,6 +518,9 @@
           } else {
             displayText = `<span style="color:#2a002a; font-weight:bold;">Inactive</span>`;
           }
+        } else {
+          displayText = `<span style="color:#2a002a; font-weight:bold;">Inactive</span>`;
+        }
         new mapboxgl.Popup()
           .setLngLat(e.lngLat)
           .setHTML(`<strong>${nbhd}</strong><br>${displayText}`)
