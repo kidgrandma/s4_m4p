@@ -18,9 +18,10 @@
       padding: 10px;
       font-size: 20px;
     }
-    .team {
-      font-weight: bold;
-    }
+    .team { font-weight: bold; }
+    .exploded { fill: black !important; opacity: 0.7; }
+    .claimed-veterans { fill: #ff00ff !important; opacity: 0.7; }
+    .claimed-virgins { fill: #00ff00 !important; opacity: 0.7; }
   </style>
 </head>
 <body>
@@ -40,8 +41,16 @@
 
     let veteransScore = 240;
     let virginsScore = 170;
+    let currentTurn = "veterans";
     const mines = new Set();
-    
+    const claimedAreas = {
+      "Echo Park": "veterans", "Koreatown": "veterans", "Westlake": "veterans",
+      "University Park": "veterans", "Eagle Rock": "veterans", "Highland Park": "veterans",
+      "Silver Lake": "veterans", "Mar Vista": "veterans", "Hancock Park": "veterans",
+      "Los Feliz": "virgins", "Palms": "virgins", "Mid-Wilshire": "virgins",
+      "Westchester": "virgins", "Exposition Park": "virgins", "Del Rey": "virgins"
+    };
+
     function updateScores() {
       document.getElementById("veterans-score").innerText = veteransScore;
       document.getElementById("virgins-score").innerText = virginsScore;
@@ -53,6 +62,37 @@
         const randomNbhd = neighborhoods[Math.floor(Math.random() * neighborhoods.length)];
         mines.add(randomNbhd);
       }
+    }
+
+    function handleNeighborhoodClick(nbhd) {
+      if (claimedAreas[nbhd]) return; // Already claimed, prevent selection
+
+      if (currentTurn === "veterans" && veteransScore >= 10) {
+        veteransScore -= 10;
+        claimedAreas[nbhd] = "veterans";
+        colorNeighborhood(nbhd, "claimed-veterans");
+        currentTurn = "virgins";
+      } else if (currentTurn === "virgins" && virginsScore >= 10) {
+        virginsScore -= 10;
+        claimedAreas[nbhd] = "virgins";
+        colorNeighborhood(nbhd, "claimed-virgins");
+        currentTurn = "veterans";
+      }
+
+      if (mines.has(nbhd)) {
+        explodeNeighborhood(nbhd);
+      }
+
+      updateScores();
+    }
+
+    function colorNeighborhood(nbhd, className) {
+      map.setPaintProperty("neighborhood-fill", "fill-color", ["match", ["get", "name"], nbhd, className === "claimed-veterans" ? "#ff00ff" : "#00ff00", "#ffa500"]);
+    }
+
+    function explodeNeighborhood(nbhd) {
+      map.setPaintProperty("neighborhood-fill", "fill-color", ["match", ["get", "name"], nbhd, "black", "#ffa500"]);
+      delete claimedAreas[nbhd];
     }
 
     map.on("load", function () {
@@ -78,7 +118,9 @@
         type: "fill",
         source: "la-neighborhoods",
         paint: {
-          "fill-color": "#ffa500",
+          "fill-color": ["match", ["get", "name"],
+            ...Object.entries(claimedAreas).flatMap(([nbhd, team]) => [nbhd, team === "veterans" ? "#ff00ff" : "#00ff00"]),
+            "#ffa500"],
           "fill-opacity": 0.5
         }
       });
@@ -88,6 +130,11 @@
         .then(data => {
           const neighborhoods = data.features.map(f => f.properties.name);
           placeMines(neighborhoods);
+
+          map.on("click", "neighborhood-fill", function (e) {
+            const nbhd = e.features[0].properties.name;
+            handleNeighborhoodClick(nbhd);
+          });
         });
     });
   </script>
