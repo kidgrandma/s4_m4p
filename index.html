@@ -9,7 +9,7 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
   <style>
     body { margin: 0; padding: 0; background: black; color: white; font-family: Arial, sans-serif; }
-    #map { width: 100vw; height: 90vh; }
+    #map { width: 100vw; height: 85vh; }
     #scoreboard {
       display: flex;
       justify-content: space-around;
@@ -18,16 +18,27 @@
       padding: 10px;
       font-size: 20px;
     }
+    #controls {
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+    }
     .team { font-weight: bold; }
     .exploded { fill: black !important; opacity: 0.7; }
     .claimed-veterans { fill: #ff00ff !important; opacity: 0.7; }
     .claimed-virgins { fill: #00ff00 !important; opacity: 0.7; }
+    .neighborhood-labels { pointer-events: none; }
   </style>
 </head>
 <body>
   <div id="scoreboard">
     <div class="team">Veterans: <span id="veterans-score">240</span> Autos</div>
     <div class="team">Virgins: <span id="virgins-score">170</span> Autos</div>
+  </div>
+  <div id="controls">
+    <button onclick="setCurrentTeam('veterans')">Score for Veterans</button>
+    <button onclick="setCurrentTeam('virgins')">Score for Virgins</button>
+    <span>Current Team: <strong id="current-team">Veterans</strong></span>
   </div>
   <div id="map"></div>
   <script>
@@ -41,7 +52,7 @@
 
     let veteransScore = 240;
     let virginsScore = 170;
-    let currentTurn = "veterans";
+    let currentTeam = "veterans";
     const mines = new Set();
     const claimedAreas = {
       "Echo Park": "veterans", "Koreatown": "veterans", "Westlake": "veterans",
@@ -54,29 +65,25 @@
     function updateScores() {
       document.getElementById("veterans-score").innerText = veteransScore;
       document.getElementById("virgins-score").innerText = virginsScore;
+      document.getElementById("current-team").innerText = currentTeam.charAt(0).toUpperCase() + currentTeam.slice(1);
     }
 
-    function placeMines(neighborhoods, minePercentage = 0.35) {
-      const mineCount = Math.floor(neighborhoods.length * minePercentage);
-      while (mines.size < mineCount) {
-        const randomNbhd = neighborhoods[Math.floor(Math.random() * neighborhoods.length)];
-        mines.add(randomNbhd);
-      }
+    function setCurrentTeam(team) {
+      currentTeam = team;
+      updateScores();
     }
 
     function handleNeighborhoodClick(nbhd) {
       if (claimedAreas[nbhd]) return; // Already claimed, prevent selection
 
-      if (currentTurn === "veterans" && veteransScore >= 10) {
+      if (currentTeam === "veterans" && veteransScore >= 10) {
         veteransScore -= 10;
         claimedAreas[nbhd] = "veterans";
         colorNeighborhood(nbhd, "claimed-veterans");
-        currentTurn = "virgins";
-      } else if (currentTurn === "virgins" && virginsScore >= 10) {
+      } else if (currentTeam === "virgins" && virginsScore >= 10) {
         virginsScore -= 10;
         claimedAreas[nbhd] = "virgins";
         colorNeighborhood(nbhd, "claimed-virgins");
-        currentTurn = "veterans";
       }
 
       if (mines.has(nbhd)) {
@@ -125,18 +132,12 @@
         }
       });
 
-      fetch("https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson")
-        .then(response => response.json())
-        .then(data => {
-          const neighborhoods = data.features.map(f => f.properties.name);
-          placeMines(neighborhoods);
-
-          map.on("click", "neighborhood-fill", function (e) {
-            const nbhd = e.features[0].properties.name;
-            handleNeighborhoodClick(nbhd);
-          });
-        });
+      map.on("click", "neighborhood-fill", function (e) {
+        const nbhd = e.features[0].properties.name;
+        handleNeighborhoodClick(nbhd);
+      });
     });
   </script>
 </body>
 </html>
+
