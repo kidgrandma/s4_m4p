@@ -24,10 +24,6 @@
       padding: 10px;
     }
     .team { font-weight: bold; }
-    .exploded { fill: black !important; opacity: 0.7; }
-    .claimed-veterans { fill: #ff00ff !important; opacity: 0.7; }
-    .claimed-virgins { fill: #00ff00 !important; opacity: 0.7; }
-    .neighborhood-labels { pointer-events: none; }
   </style>
 </head>
 <body>
@@ -54,7 +50,26 @@
     let virginsScore = 170;
     let currentTeam = "veterans";
     const mines = new Set();
-    const claimedAreas = {};
+    const claimedAreas = {
+      "Echo Park": "veterans", "Koreatown": "veterans", "Westlake": "veterans",
+      "University Park": "veterans", "Eagle Rock": "veterans", "Highland Park": "veterans",
+      "Silver Lake": "veterans", "Mar Vista": "veterans", "Hancock Park": "veterans",
+      "Sawtelle": "veterans", "San Pedro": "veterans", "Pico-Robertson": "veterans",
+      "Beverly Grove": "veterans", "Glassell Park": "veterans", "Lincoln Heights": "veterans",
+      "Beverlywood": "veterans", "Hollywood Hills": "veterans", "Hollywood Hills West": "veterans",
+      "Hollywood": "veterans", "Venice": "veterans", "Chinatown": "veterans",
+      "Palisades": "veterans", "Sherman Oaks": "veterans", "Boyle Heights": "veterans",
+      "West Adams": "veterans",
+      
+      "Los Feliz": "virgins", "Palms": "virgins", "Mid-Wilshire": "virgins",
+      "Westchester": "virgins", "Exposition Park": "virgins", "Del Rey": "virgins",
+      "West Los Angeles": "virgins", "Baldwin Hills/Crenshaw": "virgins", "Vermont-Slauson": "virgins",
+      "Vermont Square": "virgins", "Beverly Crest": "virgins", "Montecito Heights": "virgins",
+      "East Hollywood": "virgins", "Mount Washington": "virgins", "Elysian Valley": "virgins",
+      "Westwood": "virgins", "Pico-Union": "virgins", "Atwater": "virgins",
+      "Griffith Park": "virgins", "Elysian Park": "virgins", "Brentwood": "virgins",
+      "Wilmington": "virgins", "Playa del Rey": "virgins"
+    };;
     
     function updateScores() {
       document.getElementById("veterans-score").innerText = veteransScore;
@@ -73,30 +88,42 @@
       if (currentTeam === "veterans" && veteransScore >= 10) {
         veteransScore -= 10;
         claimedAreas[nbhd] = "veterans";
-        map.setFeatureState({ source: "la-neighborhoods", id: nbhd }, { team: "veterans" });
       } else if (currentTeam === "virgins" && virginsScore >= 10) {
         virginsScore -= 10;
         claimedAreas[nbhd] = "virgins";
-        map.setFeatureState({ source: "la-neighborhoods", id: nbhd }, { team: "virgins" });
       }
 
       if (mines.has(nbhd)) {
-        explodeNeighborhood(nbhd);
+        claimedAreas[nbhd] = "exploded";
       }
       
+      updateMap();
       updateScores();
     }
 
-    function explodeNeighborhood(nbhd) {
-      map.setFeatureState({ source: "la-neighborhoods", id: nbhd }, { exploded: true });
-      delete claimedAreas[nbhd];
+    function updateMap() {
+      map.setPaintProperty("neighborhood-fill", "fill-color", [
+        "match", ["get", "name"],
+        ...Object.entries(claimedAreas).flatMap(([nbhd, team]) => [nbhd, team === "veterans" ? "#ff00ff" : team === "virgins" ? "#00ff00" : "black"]),
+        "#ffa500"]
+      );
     }
 
     map.on("load", function () {
       map.addSource("la-neighborhoods", {
         type: "geojson",
-        data: "https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson",
-        generateId: true
+        data: "https://raw.githubusercontent.com/kidgrandma/s4_m4p/main/LA_Times_Neighborhood_Boundaries.geojson"
+      });
+
+      map.addLayer({
+        id: "neighborhood-borders",
+        type: "line",
+        source: "la-neighborhoods",
+        paint: {
+          "line-color": "#0099ff",
+          "line-width": 2,
+          "line-opacity": 0.8
+        }
       });
 
       map.addLayer({
@@ -104,11 +131,7 @@
         type: "fill",
         source: "la-neighborhoods",
         paint: {
-          "fill-color": [
-            "case",
-            ["boolean", ["feature-state", "exploded"], false], "black",
-            ["match", ["feature-state", "team"], "veterans", "#ff00ff", "virgins", "#00ff00", "#ffa500"]
-          ],
+          "fill-color": "#ffa500",
           "fill-opacity": 0.5
         }
       });
@@ -121,3 +144,4 @@
   </script>
 </body>
 </html>
+
